@@ -3,16 +3,29 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {GoogleLoginProvider, SocialAuthServiceConfig} from "angularx-social-login";
+import {
+  GoogleLoginProvider,
+  SocialAuthService,
+  SocialAuthServiceConfig,
+  SocialLoginModule
+} from "angularx-social-login";
 import {AuthenticatorService} from "./service/authenticator.service";
+import { LoginComponent } from './component/login/login.component';
+import { HttpClientModule} from "@angular/common/http";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    SocialLoginModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule
   ],
   providers: [
     {
@@ -30,6 +43,7 @@ import {AuthenticatorService} from "./service/authenticator.service";
       } as SocialAuthServiceConfig,
     },
     AuthenticatorService,
+    SocialAuthService,
   ],
   bootstrap: [AppComponent]
 })

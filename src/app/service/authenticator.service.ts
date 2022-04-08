@@ -61,7 +61,7 @@ export class AuthenticatorService {
 
   saveUser(): void{
     this.user = this.socialUser;
-    console.log('saveUser, user : ' + this.user);
+    console.log('saveUser, user : ' + this.user.email);
     localStorage.setItem('auth', JSON.stringify(this.user));
     this.emitUserSubject();
   }
