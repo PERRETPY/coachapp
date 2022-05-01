@@ -16,6 +16,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { HomeComponent } from './component/home/home.component';
 import { NavbarComponent } from './component/navbar/navbar.component';
 import { ContactComponent } from './component/contact/contact.component';
+import { WorkoutListComponent } from './component/workout/workout-list/workout-list.component';
+import { WorkoutPreviewComponent } from './component/workout/workout-preview/workout-preview.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { ContactComponent } from './component/contact/contact.component';
     LoginComponent,
     HomeComponent,
     NavbarComponent,
-    ContactComponent
+    ContactComponent,
+    WorkoutListComponent,
+    WorkoutPreviewComponent
   ],
   imports: [
     BrowserModule,
