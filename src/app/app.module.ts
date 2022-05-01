@@ -18,6 +18,7 @@ import { NavbarComponent } from './component/navbar/navbar.component';
 import { ContactComponent } from './component/contact/contact.component';
 import { WorkoutListComponent } from './component/workout/workout-list/workout-list.component';
 import { WorkoutPreviewComponent } from './component/workout/workout-preview/workout-preview.component';
+import { WorkoutDetailComponent } from './component/workout/workout-detail/workout-detail.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { WorkoutPreviewComponent } from './component/workout/workout-preview/wor
     NavbarComponent,
     ContactComponent,
     WorkoutListComponent,
-    WorkoutPreviewComponent
+    WorkoutPreviewComponent,
+    WorkoutDetailComponent
   ],
   imports: [
     BrowserModule,

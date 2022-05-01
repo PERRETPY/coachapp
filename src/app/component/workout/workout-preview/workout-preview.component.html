@@ -1,1 +1,7 @@
-<p>workout-preview works!</p>
+<div class="card" style="width: 18rem; cursor: pointer" (click)="onWorkoutClick()">
+  <div class="card-body">
+    <h5 class="card-title" [ngStyle]="{'color': workout.state == 'Terminé' ? 'green' : workout.state == 'En cours' ? 'orange' : 'red'}">{{ workout.title }}</h5>
+    <p class="card-text">{{ workout.description }}</p>
+    <p class="card-text"><small class="text-muted">{{ workout.beginDate }}</small></p>
+  </div>
+</div>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Workout} from "../../../model/workout.model";
 
 @Component({
   selector: 'app-workout-preview',
@@ -6,10 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./workout-preview.component.scss']
 })
 export class WorkoutPreviewComponent implements OnInit {
+  @Input()
+  workout: Workout;
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  onWorkoutClick() {
+
+  }
 }

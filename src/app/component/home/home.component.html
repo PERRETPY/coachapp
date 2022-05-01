@@ -1,5 +1,6 @@
 <nav class="navbar navbar-expand navbar-light bg-light">
   <a class="navbar-brand" href="#">Programme</a>
+  <!--
   <div class="collapse navbar-collapse">
     <ul class="navbar-nav">
       <li class="nav-item active">
@@ -13,6 +14,7 @@
       </li>
     </ul>
   </div>
+  -->
   <div class="navbar-text">
     <ul class="navbar-nav">
       <li *ngIf="user" class="nav-item active" style="margin-right: 1em">
@@ -40,9 +42,19 @@
     </div>
   </div>
 
-
-
-
-
+  <div class="content">
+    <div class="filter">
+      <p>Trier par </p>
+      <select name="sort" class="form-select sort-select" aria-label="Default select example" [(ngModel)]="sortOption" (change)="onChangeSortProperty()">
+        <option value="date_desc">Date descendant</option>
+        <option value="date_asc">Date ascendant</option>
+        <option value="state_desc">Etat descendant</option>
+        <option value="state_asc">Etat ascendant</option>
+      </select>
+    </div>
+    <div class="workout-list">
+      <app-workout-list [workoutList]="workoutList"></app-workout-list>
+    </div>
+  </div>
 
 </div>

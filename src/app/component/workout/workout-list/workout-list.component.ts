@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Workout} from "../../../model/workout.model";
 
 @Component({
   selector: 'app-workout-list',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./workout-list.component.scss']
 })
 export class WorkoutListComponent implements OnInit {
+  @Input()
+  workoutList: Workout[];
 
   constructor() { }
 
