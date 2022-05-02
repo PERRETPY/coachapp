@@ -1,60 +1,12 @@
-<nav class="navbar navbar-expand navbar-light bg-light">
-  <a class="navbar-brand" href="#">Programme</a>
-  <!--
-  <div class="collapse navbar-collapse">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-    </ul>
-  </div>
-  -->
-  <div class="navbar-text">
-    <ul class="navbar-nav">
-      <li *ngIf="user" class="nav-item active" style="margin-right: 1em">
-        <span>{{ user.name }}</span>
-      </li>
-      <li class="nav-item active" style="margin-right: 1em; cursor: pointer">
-        <a *ngIf="user" (click)="logOut()">Se déconnecter</a>
-        <a *ngIf="!user" routerLink="/login">Se connecter</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+<br>
+<form (ngSubmit)="onSubmit()" #demoForm="ngForm">
+	<div class="form-group">
+		<label>ID du document (le long texte situé entre le /d/ et le /edit/ dans le lien)</label>
+		<input type="text" class="form-control" id="sheetId" required [(ngModel)]="model.sheetId" name="sheetId" #sheetId="ngModel">
+	</div>
 
-<div class="container">
+	<button type="submit" class="btn btn-success">Submit</button>
 
-  <div class="input-group">
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="basic-addon1">
-        <i class="fa fa-file" aria-hidden="true"></i>
-      </span>
-    </div>
-    <input type="text" class="form-control" placeholder="Lien du google sheet" aria-label="Username" aria-describedby="basic-addon1">
-    <div class="input-group-append">
-      <button class="btn btn-outline-secondary" type="button">Charger</button>
-    </div>
-  </div>
-
-  <div class="content">
-    <div class="filter">
-      <p>Trier par </p>
-      <select name="sort" class="form-select sort-select" aria-label="Default select example" [(ngModel)]="sortOption" (change)="onChangeSortProperty()">
-        <option value="date_desc">Date descendant</option>
-        <option value="date_asc">Date ascendant</option>
-        <option value="state_desc">Etat descendant</option>
-        <option value="state_asc">Etat ascendant</option>
-      </select>
-    </div>
-    <div class="workout-list">
-      <app-workout-list [workoutList]="workoutList"></app-workout-list>
-    </div>
-  </div>
-
-</div>
+</form>
+<br>
+<pre>{{ output }}</pre>
