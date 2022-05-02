@@ -1,11 +1,12 @@
-<div *ngIf="isSignedIn" >
-	<button class="sign-out" matTooltip="Sign out" (click)="signOut()">Déconnexion
-	</button>
-</div>
+<div>
+  <div *ngIf="isSignedIn" >
+    <button class="sign-out" matTooltip="Sign out" (click)="signOut()">Déconnexion
+    </button>
+  </div>
   <div [style.display]="googleDisplay">
-    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
-    </div>
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
   </div>
   <app-navbar></app-navbar>
   <router-outlet></router-outlet>
   <div id="navbar-replace"></div>
+</div>

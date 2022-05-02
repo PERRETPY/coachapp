@@ -3,6 +3,7 @@ import { GoogleAuthService } from 'src/app/service/google-auth.service';
 import { ProgramService } from 'src/app/service/program.service';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { SheetModel } from './sheet-model';
+import {Workout} from "../../model/workout.model";
 
 declare global {
   interface Window { onSignIn: (googleuser: any) => void; }
@@ -14,7 +15,7 @@ declare global {
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
+  public workoutList: Workout[] = [];
   public isSignedIn: boolean = false;
   public googleDisplay = "block";
   public model = new SheetModel();
@@ -26,7 +27,9 @@ export class HomeComponent implements OnInit {
     this.output = "Renseigner l'id du google sheet puis appuyer sur Envoyer. ";
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.createFakeWorkout();
+  }
 
   async onSubmit() {
     this.output = "Processing submission...";
