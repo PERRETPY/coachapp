@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import {SocialUser} from "angularx-social-login";
-import {Subscription} from "rxjs";
-import {AuthenticatorService} from "../../service/authenticator.service";
-import {Router} from "@angular/router";
-import {Workout} from "../../model/workout.model";
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { GoogleAuthService } from 'src/app/service/google-auth.service';
+import { ProgramService } from 'src/app/service/program.service';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { SheetModel } from './sheet-model';
+
+declare global {
+  interface Window { onSignIn: (googleuser: any) => void; }
+}
 
 @Component({
   selector: 'app-home',
@@ -11,48 +14,39 @@ import {Workout} from "../../model/workout.model";
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  workoutList: Workout[] = [];
-  sortOption: String = 'date_desc';
-  stateFilterOption: String[] = [];
 
-  user: SocialUser;
-  userSubscription: Subscription;
+  public isSignedIn: boolean = false;
+  public googleDisplay = "block";
+  public model = new SheetModel();
+  public output: string;
 
-
-  constructor(private authenticatorService: AuthenticatorService,
-              private router: Router) { }
-
-  ngOnInit(): void {
-    this.createFakeWorkout();
-    this.userSubscription = this.authenticatorService.userSubject.subscribe(
-      (user: any) => {
-        this.user = user;
-      }
-    );
-    this.authenticatorService.emitUserSubject();
+  constructor(private cd: ChangeDetectorRef,
+    public gauth: GoogleAuthService,
+    public programService: ProgramService) {
+    this.output = "Renseigner l'id du google sheet puis appuyer sur Envoyer. ";
   }
 
-  logOut(): void {
-    this.authenticatorService.signOut();
-    this.router.navigate(['/']);
-  }
+  ngOnInit() { }
 
-  onChangeSortProperty(): void {
-    if(this.sortOption == 'date_desc') {
-      this.workoutList.sort((a, b) => a.beginDate < b.beginDate ? -1 : a.beginDate > b.beginDate ? 1 : 0);
-    }else if(this.sortOption == 'date_asc') {
-      this.workoutList.sort((a, b) => a.beginDate > b.beginDate ? -1 : a.beginDate < b.beginDate ? 1 : 0);
-    }else if(this.sortOption == 'state_desc') {
-      this.workoutList.sort((a, b) => a.state < b.state ? -1 : a.state > b.state ? 1 : 0);
-    }else if(this.sortOption == 'state_asc') {
-      this.workoutList.sort((a, b) => a.state > b.state ? -1 : a.state < b.state ? 1 : 0);
-    }
-  }
-
-  onFilter(): void {
-    const localStateFilterOption = this.stateFilterOption;
-    this.workoutList.filter(function (workout) {
-      return localStateFilterOption.includes(workout.state);
+  async onSubmit() {
+    this.output = "Processing submission...";
+    console.log(JSON.stringify(this.model));
+    await this.gauth.loadClient();
+    console.log("client loaded");
+    await this.gauth.loadSheetsAPI();
+    console.log("sheets v4 loaded");
+    this.programService.changeProgramLoaded(true);
+    gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: this.model.sheetId,
+      range: 'A:A'
+    }).then(() => {
+      localStorage.setItem("sheetId",this.model.sheetId);
+      this.output = "Programme récupéré !";
+      this.cd.detectChanges();
+    }, (error) => {
+      this.output = "Error: \n";
+      this.output += error.result.error.message + "\n";
+      this.cd.detectChanges();
     });
   }
 

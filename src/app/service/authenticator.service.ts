@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/**import { Injectable } from '@angular/core';
 import {GoogleLoginProvider, SocialAuthService, SocialUser} from 'angularx-social-login';
 import {Subject} from "rxjs";
 import {HttpClient} from "@angular/common/http";
@@ -70,4 +70,4 @@ export class AuthenticatorService {
     this.user = null;
     localStorage.removeItem('auth');
   }
-}
+}*/

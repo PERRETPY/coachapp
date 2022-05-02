@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+/**import { Component, OnInit } from '@angular/core';
 import {SocialAuthService, SocialUser} from "angularx-social-login";
 import {AuthenticatorService} from "../../service/authenticator.service";
 
@@ -29,4 +29,4 @@ export class LoginComponent implements OnInit {
     this.authenticatorService.signOut();
   }
 
-}
+}*/
