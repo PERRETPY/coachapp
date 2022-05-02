@@ -1,1 +1,4 @@
-<p>workout-detail works!</p>
+<div class="container" *ngIf="workout">
+  <h1>{{ workout.title }}</h1>
+  <p>{{ workout.description }}</p>
+</div>
