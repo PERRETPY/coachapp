@@ -57,15 +57,15 @@ export class HomeComponent implements OnInit {
   }
 
   createFakeWorkout(): void {
-    this.workoutList.push(new Workout('12/05/2022', 'Entrainement 1', 'A faire', 'Entrainement des dorsaux et pectoraux'));
-    this.workoutList.push(new Workout('14/05/2022', 'Entrainement 2', 'A faire', 'Entrainement des jambes'));
-    this.workoutList.push(new Workout('01/05/2022', 'Entrainement 3', 'En cours', 'Entrainement des bras'));
-    this.workoutList.push(new Workout('22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
-    this.workoutList.push(new Workout('22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
-    this.workoutList.push(new Workout('22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
-    this.workoutList.push(new Workout('22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
-    this.workoutList.push(new Workout('22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
-    this.workoutList.push(new Workout('22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
+    this.workoutList.push(new Workout(1, '12/05/2022', 'Entrainement 1', 'A faire', 'Entrainement des dorsaux et pectoraux'));
+    this.workoutList.push(new Workout(2, '14/05/2022', 'Entrainement 2', 'A faire', 'Entrainement des jambes'));
+    this.workoutList.push(new Workout(3, '01/05/2022', 'Entrainement 3', 'En cours', 'Entrainement des bras'));
+    this.workoutList.push(new Workout(4, '22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
+    this.workoutList.push(new Workout(5, '22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
+    this.workoutList.push(new Workout(6, '22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
+    this.workoutList.push(new Workout(7, '22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
+    this.workoutList.push(new Workout(8, '22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
+    this.workoutList.push(new Workout(9, '22/04/2022', 'Entrainement 4', 'Terminé', 'Entrainement des bras'));
   }
 
 }
