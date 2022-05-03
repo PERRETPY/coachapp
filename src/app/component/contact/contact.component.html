@@ -2,23 +2,23 @@
   <h1>Contact</h1>
   <div class="content-center">
     <div class="profile-image">
-      <img [src]="coachImage" alt="">
+      <img [src]="coachInfos.image" alt="">
     </div>
-    <h2>{{ coachName }}</h2>
+    <h2>{{ coachInfos.name }}</h2>
     <div>
       <i class="fa fa-globe icon" aria-hidden="true"></i>
-      <a [href]="coachWebsite" target="_blank" rel="noopener noreferrer">{{ coachWebsite }}</a>
+      <a [href]="coachInfos.site" target="_blank" rel="noopener noreferrer">{{ coachInfos.site }}</a>
     </div>
     <div>
       <i class="fa fa-envelope icon" aria-hidden="true"></i>
-      <a [href]="'mailto:'+coachMail">{{ coachMail }}</a>
+      <a [href]="'mailto:'+coachInfos.mail">{{ coachInfos.mail }}</a>
     </div>
     <div class="description">
-      <p>{{ description }}</p>
+      <p>{{ coachInfos.description }}</p>
     </div>
     <div>
       <div class="share-button fb">
-        <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+coachWebsite" target="_blank" rel="noopener" class="buttonlink">
+        <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+coachInfos.site" target="_blank" rel="noopener" class="buttonlink">
           <svg viewBox="0 0 12 12" preserveAspectRatio="xMidYMid meet">
             <path class="svg-icon-path" d="M9.1,0.1V2H8C7.6,2,7.3,2.1,7.1,2.3C7,2.4,6.9,2.7,6.9,3v1.4H9L8.8,6.5H6.9V12H4.7V6.5H2.9V4.4h1.8V2.8 c0-0.9,0.3-1.6,0.7-2.1C6,0.2,6.6,0,7.5,0C8.2,0,8.7,0,9.1,0.1z"></path>
           </svg>
@@ -26,17 +26,17 @@
         </a>
       </div>
       <div class="share-button twitter">
-        <a [href]="'https://twitter.com/share?url='+coachWebsite" class="buttonlink" target="_blank" rel="noopener">
+        <a [href]="'https://twitter.com/share?url='+coachInfos.site" class="buttonlink" target="_blank" rel="noopener">
           <span>Tweet</span>
         </a>
       </div>
       <div class="share-button whatsapp">
-        <a [href]="'whatsapp://send?text='+coachWebsite" class="buttonlink" target="_blank" rel="noopener">
+        <a [href]="'whatsapp://send?text='+coachInfos.site" class="buttonlink" target="_blank" rel="noopener">
           <span>Whatsapp</span>
         </a>
       </div>
       <div class="share-button mail">
-        <a [href]="'mailto:?subject=Mon coach est super !&amp;body=Regarde le site de mon coach : '+coachWebsite+'%0D%0A Daamm les gens !'" class="buttonlink" target="_blank" rel="noopener">
+        <a [href]="'mailto:?subject=Mon coach est super !&amp;body=Regarde le site de mon coach : '+coachInfos.site+'%0D%0A Daamm les gens !'" class="buttonlink" target="_blank" rel="noopener">
           <i class="fa fa-envelope" aria-hidden="true"></i>
           <span>Mail</span>
         </a>

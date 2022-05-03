@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GoogleAuthService } from './service/google-auth.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { ProgramService } from './service/program.service';
 
 declare global {
   interface Window { onSignIn: (googleuser: any) => void; }
@@ -16,7 +17,8 @@ export class AppComponent implements OnInit {
   public googleDisplay = "block";
 
   constructor(public gdata: GoogleAuthService,
-    private cd: ChangeDetectorRef) {
+    private cd: ChangeDetectorRef,
+    public programService: ProgramService) {
     window.onSignIn = (googleUser) => this.onSignIn(googleUser);
   }
 
@@ -36,5 +38,6 @@ export class AppComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+   }
 }

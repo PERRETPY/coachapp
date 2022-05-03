@@ -1,5 +1,4 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { JsLoaderService } from './js-loader.service';
 
 declare global {
     var gapi;
@@ -9,20 +8,13 @@ declare global {
     providedIn: 'root'
 })
 export class GoogleAuthService {
-    public javascriptFile = "https://apis.google.com/js/platform.js";
     public isSignedIn: boolean = false;
     public googleDisplay = "block";
     public googleUser: any;
     public signIn: EventEmitter<void> = new EventEmitter<void>();
     public signedOut: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor(public loader: JsLoaderService) {
-
-        console.log("Loading the javascript API file.");
-        this.loader.loadjs(this.javascriptFile).then(() => {
-            // file loaded
-        });
-    }
+    constructor() {}
 
     public onSignIn(googleUser) {
         this.googleUser = googleUser;
