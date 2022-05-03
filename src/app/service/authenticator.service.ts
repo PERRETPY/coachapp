@@ -1,4 +1,4 @@
-/**import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {GoogleLoginProvider, SocialAuthService, SocialUser} from 'angularx-social-login';
 import {Subject} from "rxjs";
 import {HttpClient} from "@angular/common/http";
@@ -49,7 +49,6 @@ export class AuthenticatorService {
     return this.authService.refreshAuthToken(GoogleLoginProvider.PROVIDER_ID).then(
       response => {
         this.saveUser();
-        console.log('TOKEN : ' + this.socialUser.idToken);
       }
     );
   }
@@ -70,4 +69,4 @@ export class AuthenticatorService {
     this.user = null;
     localStorage.removeItem('auth');
   }
-}*/
+}

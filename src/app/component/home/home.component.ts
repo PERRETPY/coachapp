@@ -3,6 +3,7 @@ import { GoogleAuthService } from 'src/app/service/google-auth.service';
 import { ProgramService } from 'src/app/service/program.service';
 import { SheetModel } from './sheet-model';
 import {Workout} from "../../model/workout.model";
+import {Subscription} from "rxjs";
 
 declare global {
   interface Window { onSignIn: (googleuser: any) => void; }
@@ -14,11 +15,15 @@ declare global {
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  public workoutList: Workout[] = [];
+  workoutList: Workout[] = [];
+  workoutSubscription: Subscription;
+
   public isSignedIn: boolean = false;
   public googleDisplay = "block";
   public model = new SheetModel();
   public output: string;
+
+  loaded: boolean = false;
 
   constructor(private cd: ChangeDetectorRef,
     public gauth: GoogleAuthService,
@@ -27,29 +32,29 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.workoutSubscription = this.programService.listWorkoutSubject.subscribe(
+      (workoutList) => {
+        this.workoutList = workoutList;
+        if(this.workoutList) {
+          console.log('Workoutlist from home component');
+          console.log(this.workoutList);
+          this.loaded = true;
+          console.log(this.loaded);
+          this.cd.detectChanges();
+
+        }
+      }
+    );
+    this.programService.emitWorkouts();
+    this.programService.getWorkouts().then();
   }
 
-  async onSubmit() {
-    this.output = "Processing submission...";
-    console.log(JSON.stringify(this.model));
-    await this.gauth.loadClient();
-    await this.gauth.loadSheetsAPI();
-    console.log("sheets v4 loaded");
-    gapi.client.sheets.spreadsheets.get({
-      spreadsheetId: this.model.sheetId,
-    }).then(() => {
-      localStorage.setItem("sheetId",this.model.sheetId);
-      this.output = "Programme récupéré !";
-      this.cd.detectChanges();
-    }, (error) => {
-      this.output = "Error: \n";
-      this.output += error.result.error.message + "\n";
-      this.cd.detectChanges();
-    });
-    this.programService.loadInfosCoach();
-    this.programService.loadListModules();
-    this.programService.loadWorkouts();
-    this.programService.loadMetaDonnees();
+  onSubmit() {
+    this.programService.setSpreadsheets(this.model.sheetId).then();
+  }
+
+  getWorkoutList() {
+
   }
 
 }

@@ -10,3 +10,13 @@
 </form>
 <br>
 <pre>{{ output }}</pre>
+
+<p>{{loaded}}</p>
+
+<h2>Hello1</h2>
+<h3 *ngIf="workoutList">{{workoutList[0].titre}}</h3>
+
+<div *ngFor="let workout of workoutList">
+  <h2>Hello</h2>
+  <p>{{ workout.titre }}</p>
+</div>
