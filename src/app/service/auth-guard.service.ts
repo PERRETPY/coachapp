@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/**import { Injectable } from '@angular/core';
 import {AuthenticatorService} from "./authenticator.service";
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from "@angular/router";
 import {Observable} from "rxjs";
@@ -27,4 +27,4 @@ export class AuthGuardService {
     }
 
   }
-}
+}*/

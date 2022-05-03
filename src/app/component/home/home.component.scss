@@ -1,0 +1,47 @@
+.nav {
+  padding-right: 2em;
+  padding-left: 4em;
+}
+
+.navbar-text {
+  margin-right: 2em;
+}
+
+.navbar-brand {
+  margin-left: 1em;
+}
+
+.input-group {
+  width: 100%;
+
+}
+
+.container {
+  margin-top: 2em;
+}
+
+.input-group-text {
+  height: 100%;
+}
+
+.workout-list {
+  margin-top: 2em;
+  width: 100%;
+  height: 65vh;
+  overflow: scroll;
+}
+
+.filter {
+  margin-top: 1em;
+  width: 100%;
+  border-radius: .2em;
+  box-shadow: 3px 3px 10px 1px rgba(0, 0, 0, .1);
+  padding: .5em;
+
+  display: flex;
+  align-items: center;
+}
+
+.sort-select {
+  max-width: 200px;
+}

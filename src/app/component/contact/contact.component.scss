@@ -1,0 +1,91 @@
+.content-center {
+  margin-top: 7%;
+  text-align: center;
+}
+
+
+.profile-image {
+  img {
+    max-height: 10em;
+    border-radius: 50%;
+  }
+}
+
+.icon {
+  margin-right: 1em;
+}
+
+.description {
+  text-align: justify;
+  margin-top: 1em;
+  display: inline-block;
+  width: 50%;
+  height: 10em;
+  padding: 1em;
+  overflow: scroll;
+  box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, .2);
+  margin-bottom: 2em;
+}
+
+
+
+.share-button {
+  border-radius: 3px;
+  font-weight: 600;
+  padding: 5px 8px;
+  display: inline-block;
+  position: static;
+}
+
+
+.fb {
+  background: #3b5998;
+  margin-right: 2em;
+  &:hover {
+    background-color: #213A6F;
+  }
+}
+
+.twitter {
+  background-color: #1b95e0;
+  margin-right: 2em;
+  &:hover {
+    background-color: #0c7abf;
+  }
+}
+
+.buttonlink {
+  color: white;
+  text-decoration: none;
+}
+
+.whatsapp {
+  background-color: #4FE663;
+  margin-right: 2em;
+  &:hover {
+    background-color: #1EC529;
+  }
+}
+
+.mail {
+  background-color: lightgray;
+  &:hover {
+    background-color: gray;
+  }
+}
+
+
+.share-button svg {
+  width: 18px;
+  fill: white;
+  vertical-align: middle;
+  border-radius: 2px
+}
+
+.share-button span {
+  vertical-align: middle;
+  color: white;
+  font-size: 14px;
+  padding: 0 3px
+}
+
