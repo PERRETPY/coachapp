@@ -1,14 +1,23 @@
-<br>
-<form (ngSubmit)="onSubmit()" #demoForm="ngForm">
-	<div class="form-group">
-		<label>ID du document (le long texte situé entre le /d/ et le /edit/ dans le lien)</label>
-		<input type="text" class="form-control" id="sheetId" required [(ngModel)]="model.sheetId" name="sheetId" #sheetId="ngModel">
-	</div>
+<div *ngIf="user">
+  <form (ngSubmit)="onSubmit()" #demoForm="ngForm">
+    <div class="form-group">
+      <label>ID du document (le long texte situé entre le /d/ et le /edit/ dans le lien)</label>
+      <input type="text" class="form-control" id="sheetId" required [(ngModel)]="model.sheetId" name="sheetId" #sheetId="ngModel">
+    </div>
 
-	<button type="submit" class="btn btn-success">Submit</button>
+    <button type="submit" class="btn btn-success">Submit</button>
 
-</form>
-<br>
-<pre>{{ output }}</pre>
+  </form>
 
-<app-workout-list [workoutList]="workoutList"></app-workout-list>
+  <div *ngIf="spreadSheetIsSet()">
+    <app-workout-list [workoutList]="workoutList"></app-workout-list>
+  </div>
+  <div *ngIf="!spreadSheetIsSet()">
+    <p>Merci de renseigner le lien du google sheet</p>
+  </div>
+
+
+</div>
+<div *ngIf="!user">
+  Merci de vous connecter à l'aide de votre compte Google !
+</div>

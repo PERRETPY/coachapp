@@ -62,7 +62,7 @@ import { NavigationBarComponent } from './component/navigation-bar/navigation-ba
     AuthenticatorService,
     ProgramService,
     JsLoaderService,
-    GoogleAuthService,
+    //GoogleAuthService,
     SocialAuthService,
   ],
   bootstrap: [AppComponent]

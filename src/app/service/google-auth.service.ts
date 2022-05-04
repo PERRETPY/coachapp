@@ -17,11 +17,11 @@ export class GoogleAuthService {
     constructor() {}
 
     public onSignIn(googleUser) {
-        this.googleUser = googleUser;
+        //this.googleUser = googleUser;
         console.log("signed in");
         this.isSignedIn = true;
         this.googleDisplay = "none";
-        this.signIn.emit();
+        //this.signIn.emit();
     }
 
     public async signOut() {
@@ -42,7 +42,7 @@ export class GoogleAuthService {
                 resolve();
             },
                 (error) => {
-                    console.log("Error loading client: " 
+                    console.log("Error loading client: "
                     + JSON.stringify(error));
                 });
         });
@@ -57,7 +57,7 @@ export class GoogleAuthService {
                     resolve();
                 },
                     (error) => {
-                        console.log("Error loading SheetsAPI: " 
+                        console.log("Error loading SheetsAPI: "
                         + JSON.stringify(error));
                     });
         });

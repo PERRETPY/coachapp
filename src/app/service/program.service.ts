@@ -56,6 +56,7 @@ export class ProgramService {
     await this.loadSheetsAPI();
 
     this.listWorkouts = [];
+
     gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: localStorage.getItem('sheetId'),
       range: 'Exercices!A1:N'

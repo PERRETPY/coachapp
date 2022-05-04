@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {AuthenticatorService} from "../../service/authenticator.service";
 import {SocialUser} from "angularx-social-login";
 import {Subscription} from "rxjs";
@@ -14,7 +14,8 @@ export class NavigationBarComponent implements OnInit {
   userSubscription: Subscription;
 
 
-  constructor(private authenticatorService: AuthenticatorService,
+  constructor(private cd: ChangeDetectorRef,
+              private authenticatorService: AuthenticatorService,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -33,7 +34,7 @@ export class NavigationBarComponent implements OnInit {
   onSignOut() {
     this.authenticatorService.signOut();
     this.user = null;
-    this.router.navigate(['/']);
+    this.router.navigate(['/']).then();
   }
 
 }

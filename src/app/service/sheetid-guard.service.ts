@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import {AuthenticatorService} from "./authenticator.service";
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from "@angular/router";
-import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuardService {
+export class SheetidGuardService {
 
-  constructor(private authenticatorService: AuthenticatorService,
-              private router: Router) {
+  constructor(private router: Router) {
   }
 
 
@@ -18,11 +16,9 @@ export class AuthGuardService {
     state: RouterStateSnapshot
   ): any {
 
-    if (this.authenticatorService.user != null){
-      console.log('Auth OK !');
+    if (localStorage.getItem('sheetId') != null){
       return true;
     }else{
-      console.log('Auth KO !');
       this.router.navigate(['/']).then();
     }
 
