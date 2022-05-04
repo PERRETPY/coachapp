@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.workoutList = [];
     this.userSubscription = this.authenticatorService.userSubject.subscribe(
       (user: any) => {
         this.user = user;
@@ -63,6 +64,7 @@ export class HomeComponent implements OnInit {
   }
 
   getWorkoutList() {
+    this.workoutList = [];
     this.workoutSubscription = this.programService.listWorkoutSubject.subscribe(
       (workoutList) => {
         this.workoutList = workoutList;
@@ -74,11 +76,7 @@ export class HomeComponent implements OnInit {
       }
     );
     this.programService.emitWorkouts();
-    this.programService.getWorkouts().then(
-      () => {
-        this.cd.detectChanges();
-      }
-    );
+    this.programService.getWorkouts();
   }
 
 }

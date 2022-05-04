@@ -10,7 +10,7 @@ import {Subject} from "rxjs";
 })
 export class ProgramService {
 
-  public infosCoach: Coach;
+  infosCoach: Coach;
   infoCoachSubject: Subject<Coach> = new Subject<Coach>();
 
   public infosMetaDonnees: MetaDonnees;
@@ -18,6 +18,9 @@ export class ProgramService {
 
   listWorkouts: Array<Workout>;
   listWorkoutSubject: Subject<Workout[]> = new Subject<Workout[]>();
+
+  workout: Workout;
+  workoutSubject: Subject<Workout> = new Subject<Workout>();
 
   constructor() { }
 
@@ -49,29 +52,32 @@ export class ProgramService {
     console.log(this.listModules);
   }
 
-  public async getWorkouts() {
-    console.log('get call');
-
-    await this.loadClient();
-    await this.loadSheetsAPI();
-
-    this.listWorkouts = [];
-
-    gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: localStorage.getItem('sheetId'),
-      range: 'Exercices!A1:N'
-    }).then((response) => {
-      for (let i = 1; i < response.result.values.length; i++) {
-        this.listWorkouts.push(new Workout(response.result.values[i][0], response.result.values[i][1], response.result.values[i][2],
-          response.result.values[i][3], response.result.values[i][4], response.result.values[i][5], response.result.values[i][6],
-          response.result.values[i][7], response.result.values[i][8], response.result.values[i][9],
-          response.result.values[i][10], response.result.values[i][11], response.result.values[i][12]));
+  public getWorkouts(): void {
+    this.loadClient().then(
+      () => {
+         this.loadSheetsAPI().then(
+          () => {
+            gapi.client.sheets.spreadsheets.values.get({
+              spreadsheetId: localStorage.getItem('sheetId'),
+              range: 'Exercices!A1:N'
+            }).then((response) => {
+              this.listWorkouts = [];
+              for (let i = 1; i < response.result.values.length; i++) {
+                this.listWorkouts.push(new Workout(response.result.values[i][0], response.result.values[i][1], response.result.values[i][2],
+                  response.result.values[i][3], response.result.values[i][4], response.result.values[i][5], response.result.values[i][6],
+                  response.result.values[i][7], response.result.values[i][8], response.result.values[i][9],
+                  response.result.values[i][10], response.result.values[i][11], response.result.values[i][12]));
+              }
+              console.log('From here');
+              console.log(this.listWorkouts);
+              this.emitWorkouts();
+            }, (error) => {
+              console.log('Erreur :' + error);
+            });
+          }
+        );
       }
-      this.emitWorkouts();
-    }, (error) => {
-      console.log('Erreur :' + error);
-    });
-    console.log(this.listWorkouts);
+    );
   }
 
   public emitWorkouts(): void {
@@ -118,10 +124,44 @@ export class ProgramService {
     return this.listWorkouts.filter(workout => workout.codeModule === codeModule);
   }
 
-  public getWorkoutById(codeModule: String, titre: String, dateDebutPrevue: String): Workout {
-    return this.listWorkouts.find(workout => {
-      workout.codeModule === codeModule && workout.titre === titre && workout.dateDebutPrevue === dateDebutPrevue;
-    });
+  public getWorkoutById(codeModule: String, titre: String, dateDebutPrevue: String): void {
+    console.log('hello from here');
+    this.loadClient().then(
+      () => {
+        this.loadSheetsAPI().then(
+          () => {
+            this.listWorkouts = [];
+
+            gapi.client.sheets.spreadsheets.values.get({
+              spreadsheetId: localStorage.getItem('sheetId'),
+              range: 'Exercices!A1:N'
+            }).then((response) => {
+              for (let i = 1; i < response.result.values.length; i++) {
+                console.log('boucle');
+                console.log(response.result.values[i][0]);
+                if(codeModule === response.result.values[i][0]
+                && titre === response.result.values[i][1]
+                && dateDebutPrevue === response.result.values[i][7]) {
+                  console.log('workout find');
+                  this.workout = new Workout(response.result.values[i][0], response.result.values[i][1], response.result.values[i][2],
+                    response.result.values[i][3], response.result.values[i][4], response.result.values[i][5], response.result.values[i][6],
+                    response.result.values[i][7], response.result.values[i][8], response.result.values[i][9],
+                    response.result.values[i][10], response.result.values[i][11], response.result.values[i][12])
+                }
+                this.emitWorkout();
+              }
+            }, (error) => {
+              console.log('Erreur :' + error);
+            });
+          }
+        );
+      }
+    );
+  }
+
+  public emitWorkout() {
+    const workout = this.workout;
+    this.workoutSubject.next(workout);
   }
 
   async setSpreadsheets(sheetId: string) {
