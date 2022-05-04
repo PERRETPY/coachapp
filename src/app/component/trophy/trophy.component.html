@@ -1,0 +1,6 @@
+<div class="container">
+  <div *ngFor="let module of listModules">
+    <h1>{{module.libelle}}</h1>
+    <p *ngFor="let workout of module.workoutList">{{ workout.titre }}</p>
+  </div>
+</div>

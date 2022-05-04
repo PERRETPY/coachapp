@@ -14,7 +14,9 @@ export class ProgramService {
   infoCoachSubject: Subject<Coach> = new Subject<Coach>();
 
   public infosMetaDonnees: MetaDonnees;
-  public listModules: Array<Module>;
+
+  listModules: Array<Module>;
+  listModulesSubject: Subject<Module[]> = new Subject<Module[]>();
 
   listWorkouts: Array<Workout>;
   listWorkoutSubject: Subject<Workout[]> = new Subject<Workout[]>();
@@ -36,23 +38,38 @@ export class ProgramService {
     });
   }
 
-  public loadListModules () {
+  public getListModules () {
     this.listModules =  [];
-    gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: localStorage.getItem('sheetId'),
-      range: 'Module!A1:D'
-    }).then((response) => {
-      for(let i =1; i< response.result.values.length; i++){
-        this.listModules.push(new Module(response.result.values[i][0],response.result.values[i][1],
-          response.result.values[i][2]));
+    this.loadClient().then(
+      () => {
+        this.loadSheetsAPI().then(
+          () => {
+            gapi.client.sheets.spreadsheets.values.get({
+              spreadsheetId: localStorage.getItem('sheetId'),
+              range: 'Module!A1:D'
+            }).then((response) => {
+              for(let i =1; i< response.result.values.length; i++){
+                this.listModules.push(new Module(response.result.values[i][0],response.result.values[i][1],
+                  response.result.values[i][2]));
+              }
+              this.emitListModules();
+            }, (error) => {
+              console.log('Erreur :' + error);
+            });
+            console.log(this.listModules);
+          });
       }
-    }, (error) => {
-      console.log('Erreur :' + error);
-    });
-    console.log(this.listModules);
+    );
+
   }
 
-  public getWorkouts(): void {
+  public emitListModules(): void {
+    const listModules = this.listModules;
+    this.listModulesSubject.next(listModules);
+  }
+
+
+  getWorkouts(): void {
     this.loadClient().then(
       () => {
          this.loadSheetsAPI().then(
@@ -80,12 +97,12 @@ export class ProgramService {
     );
   }
 
-  public emitWorkouts(): void {
+  emitWorkouts(): void {
     const workoutList = this.listWorkouts;
     this.listWorkoutSubject.next(workoutList);
   }
 
-  public async getInfosCoach() {
+  async getInfosCoach() {
     await this.loadClient();
     await this.loadSheetsAPI();
 
@@ -101,17 +118,13 @@ export class ProgramService {
     });
   }
 
-  public emitInfosCoach(): void {
+  emitInfosCoach(): void {
     const infosCoach = this.infosCoach;
     this.infoCoachSubject.next(infosCoach);
   }
 
   public getMetaDonnees(): MetaDonnees {
     return this.infosMetaDonnees;
-  }
-
-  public getListModules(): Array<Module> {
-    return this.listModules;
   }
 
   public getModule(code: String): Module {

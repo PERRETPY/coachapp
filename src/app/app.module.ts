@@ -23,6 +23,7 @@ import { ProgramService } from './service/program.service';
 import { JsLoaderService } from './service/js-loader.service';
 import { GoogleAuthService } from './service/google-auth.service';
 import { NavigationBarComponent } from './component/navigation-bar/navigation-bar.component';
+import { TrophyComponent } from './component/trophy/trophy.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { NavigationBarComponent } from './component/navigation-bar/navigation-ba
     WorkoutListComponent,
     WorkoutPreviewComponent,
     WorkoutDetailComponent,
-    NavigationBarComponent
+    NavigationBarComponent,
+    TrophyComponent
   ],
   imports: [
     BrowserModule,
