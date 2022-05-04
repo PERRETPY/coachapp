@@ -49,4 +49,11 @@ export class WorkoutDetailComponent implements OnInit {
   }
 
 
+  onSubmitCommentaire() {
+    console.log(this.workout.commentaire);
+  }
+
+  onChangeState(newState: string) {
+
+  }
 }
