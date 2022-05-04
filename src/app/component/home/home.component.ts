@@ -36,12 +36,8 @@ export class HomeComponent implements OnInit {
       (workoutList) => {
         this.workoutList = workoutList;
         if(this.workoutList) {
-          console.log('Workoutlist from home component');
-          console.log(this.workoutList);
           this.loaded = true;
-          console.log(this.loaded);
           this.cd.detectChanges();
-
         }
       }
     );

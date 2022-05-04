@@ -11,10 +11,12 @@ import {Subject} from "rxjs";
 export class ProgramService {
 
   public infosCoach: Coach;
+  infoCoachSubject: Subject<Coach> = new Subject<Coach>();
+
   public infosMetaDonnees: MetaDonnees;
   public listModules: Array<Module>;
 
-  public listWorkouts: Array<Workout>;
+  listWorkouts: Array<Workout>;
   listWorkoutSubject: Subject<Workout[]> = new Subject<Workout[]>();
 
   constructor() { }
@@ -71,24 +73,34 @@ export class ProgramService {
     console.log(this.listWorkouts);
   }
 
-  public loadInfosCoach () {
+  public emitWorkouts(): void {
+    const workoutList = this.listWorkouts;
+    this.listWorkoutSubject.next(workoutList);
+  }
+
+  public async getInfosCoach() {
+    await this.loadClient();
+    await this.loadSheetsAPI();
+
     gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: localStorage.getItem('sheetId'),
       range: 'Contact!A1:F'
     }).then((response) => {
-      this.infosCoach = new Coach (response.result.values[1][0],response.result.values[1][1],
+      this.infosCoach = new Coach(response.result.values[1][0], response.result.values[1][1],
         response.result.values[1][2], response.result.values[1][3], response.result.values[1][5]);
+      this.emitInfosCoach();
     }, (error) => {
       console.log('Erreur :' + error);
     });
   }
 
-  public getMetaDonnees(): MetaDonnees {
-    return this.infosMetaDonnees;
+  public emitInfosCoach(): void {
+    const infosCoach = this.infosCoach;
+    this.infoCoachSubject.next(infosCoach);
   }
 
-  public getInfosCoach(): Coach {
-    return this.infosCoach;
+  public getMetaDonnees(): MetaDonnees {
+    return this.infosMetaDonnees;
   }
 
   public getListModules(): Array<Module> {
@@ -99,11 +111,6 @@ export class ProgramService {
     return this.listModules.find(module => {
       module.code == code
     });
-  }
-
-  public emitWorkouts(): void {
-    const workoutList = this.listWorkouts;
-    this.listWorkoutSubject.next(workoutList);
   }
 
   public getWorkoutsByModule(codeModule: String): Array<Workout> {
