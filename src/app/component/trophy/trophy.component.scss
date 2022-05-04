@@ -1,0 +1,39 @@
+.content {
+  width: 100%;
+  margin-top: 2em;
+  display: flex;
+}
+
+.left-content {
+  width: 75%;
+  padding: 1em;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  row-gap: 2em;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.module-card {
+  width: 45%;
+}
+
+.center-div {
+  border-left: solid black .1em;
+}
+
+.right-content {
+  width: 25%;
+  padding: 1em;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  row-gap: 2em;
+  align-items: flex-start;
+  align-content: flex-start;
+}

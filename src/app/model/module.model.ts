@@ -5,6 +5,7 @@ export class Module {
     public libelle: String;
     public description: String;
     public workoutList: Workout[];
+    public avancement: number;
 
     constructor(code, libelle, description) {
         this.code = code;

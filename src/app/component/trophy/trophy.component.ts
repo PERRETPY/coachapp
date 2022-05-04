@@ -16,6 +16,8 @@ export class TrophyComponent implements OnInit {
   listWorkouts: Workout[];
   listWorkoutsSubscription: Subscription = new Subscription();
 
+  listChallenge: Workout[];
+
   constructor(private programService: ProgramService,
               private cd: ChangeDetectorRef) { }
 
@@ -39,6 +41,7 @@ export class TrophyComponent implements OnInit {
       (workoutList) => {
         this.listWorkouts = workoutList;
         if(this.listWorkouts) {
+          this.setListChallenge();
           this.addWorkoutsToModules();
         }
       }
@@ -55,9 +58,29 @@ export class TrophyComponent implements OnInit {
           workout => workout.codeModule === module.code
         );
         module.workoutList = workoutList;
+        module.avancement = this.calculateAchivement(workoutList);
       }
     );
     this.cd.detectChanges();
     console.log(this.listModules)
+  }
+
+  calculateAchivement(workoutList: Workout[]): number {
+    let nbDone = 0;
+    workoutList.forEach(
+      (workout) => {
+        if(workout.etat == 'terminé') {
+          nbDone += 1;
+        }
+      }
+    );
+
+    return nbDone / workoutList.length * 100;
+  }
+
+  private setListChallenge() {
+    this.listChallenge = this.listWorkouts.filter(
+      workout => workout.type === 'Défi'
+    )
   }
 }

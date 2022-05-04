@@ -1,6 +1,28 @@
 <div class="container">
-  <div *ngFor="let module of listModules">
-    <h1>{{module.libelle}}</h1>
-    <p *ngFor="let workout of module.workoutList">{{ workout.titre }}</p>
+  <div class="content">
+    <div class="left-content">
+
+      <div class="card module-card" *ngFor="let module of listModules">
+        <div class="card-body">
+          <div class="progress">
+            <div *ngIf="module.avancement" class="progress-bar" role="progressbar" [style]="'width: '+module.avancement+'%;'"   aria-valuemin="0" aria-valuemax="100">{{ module.avancement }}%</div>
+            <div *ngIf="!module.avancement" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"  aria-valuemin="0" aria-valuemax="100">0%</div>
+          </div>
+          <h5 class="card-title">{{ module.code }} : {{ module.libelle }}</h5>
+          <p class="card-text">{{ module.description }}</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="center-div"></div>
+    <div class="right-content">
+      <div class="card" *ngFor="let challenge of listChallenge">
+        <div class="card-body">
+          <h5 class="card-title">{{ challenge.titre }}</h5>
+          <p class="card-text">{{ challenge.description }}</p>
+        </div>
+      </div>
+    </div>
   </div>
+
 </div>
