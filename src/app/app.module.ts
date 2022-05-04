@@ -3,14 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-/**import {
+import {
   GoogleLoginProvider,
   SocialAuthService,
   SocialAuthServiceConfig,
   SocialLoginModule
-} from "angularx-social-login";*/
-//import {AuthenticatorService} from "./service/authenticator.service";
-//import { LoginComponent } from './component/login/login.component';
+} from "angularx-social-login";
+import {AuthenticatorService} from "./service/authenticator.service";
+import { LoginComponent } from './component/login/login.component';
 import { HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { HomeComponent } from './component/home/home.component';
@@ -22,28 +22,30 @@ import { WorkoutDetailComponent } from './component/workout/workout-detail/worko
 import { ProgramService } from './service/program.service';
 import { JsLoaderService } from './service/js-loader.service';
 import { GoogleAuthService } from './service/google-auth.service';
+import { NavigationBarComponent } from './component/navigation-bar/navigation-bar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    //LoginComponent,
+    LoginComponent,
     HomeComponent,
     NavbarComponent,
     ContactComponent,
     WorkoutListComponent,
     WorkoutPreviewComponent,
-    WorkoutDetailComponent
+    WorkoutDetailComponent,
+    NavigationBarComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    //SocialLoginModule,
+    SocialLoginModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule
   ],
   providers: [
-    /**{
+    {
       provide: 'SocialAuthServiceConfig',
       useValue: {
         autoLogin: false,
@@ -56,12 +58,12 @@ import { GoogleAuthService } from './service/google-auth.service';
           }
         ]
       } as SocialAuthServiceConfig,
-    },*/
-    //AuthenticatorService,
+    },
+    AuthenticatorService,
     ProgramService,
     JsLoaderService,
-    GoogleAuthService,
-    //SocialAuthService,
+    //GoogleAuthService,
+    SocialAuthService,
   ],
   bootstrap: [AppComponent]
 })

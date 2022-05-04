@@ -1,4 +1,4 @@
-/**import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {GoogleLoginProvider, SocialAuthService, SocialUser} from 'angularx-social-login';
 import {Subject} from "rxjs";
 import {HttpClient} from "@angular/common/http";
@@ -13,6 +13,9 @@ export class AuthenticatorService {
   user: SocialUser;
 
   userSubject = new Subject<any>();
+
+  public signIn: EventEmitter<void> = new EventEmitter<void>();
+  public signedOut: EventEmitter<void> = new EventEmitter<void>();
 
 
   constructor(private httpClient: HttpClient, private authService: SocialAuthService) {
@@ -36,20 +39,26 @@ export class AuthenticatorService {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
       response => {
         this.saveUser();
+        this.signIn.emit();
       }
     );
   }
 
   signOut(): void {
     this.authService.signOut().then(r => console.log(r));
-    this.destroyUser();
+    let auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(() => {
+      this.destroySheetId();
+      this.signedOut.emit();
+      this.destroyUser();
+      this.emitUserSubject();
+    });
   }
 
   refreshGoogleToken(): Promise<void> {
     return this.authService.refreshAuthToken(GoogleLoginProvider.PROVIDER_ID).then(
       response => {
         this.saveUser();
-        console.log('TOKEN : ' + this.socialUser.idToken);
       }
     );
   }
@@ -70,4 +79,8 @@ export class AuthenticatorService {
     this.user = null;
     localStorage.removeItem('auth');
   }
-}*/
+
+  destroySheetId(): void {
+    localStorage.removeItem('sheetId');
+  }
+}

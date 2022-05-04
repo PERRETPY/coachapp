@@ -1,0 +1,5 @@
+<div class="head-navbar">
+  <p *ngIf="user">Bonjour {{ user.firstName }}</p>
+  <button class="btn btn-success" (click)="onSignIn()" *ngIf="!user">Se connecter</button>
+  <button class="btn btn-danger" (click)="onSignOut()" *ngIf="user">Se déconnecter</button>
+</div>
