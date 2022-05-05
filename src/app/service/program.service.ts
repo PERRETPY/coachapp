@@ -83,7 +83,7 @@ export class ProgramService {
                 this.listWorkouts.push(new Workout(response.result.values[i][0], response.result.values[i][1], response.result.values[i][2],
                   response.result.values[i][3], response.result.values[i][4], response.result.values[i][5], response.result.values[i][6],
                   response.result.values[i][7], response.result.values[i][8], response.result.values[i][9],
-                  response.result.values[i][10], response.result.values[i][11], response.result.values[i][12]));
+                  response.result.values[i][10], response.result.values[i][11], response.result.values[i][12], i));
               }
               console.log('From here');
               console.log(this.listWorkouts);
@@ -159,7 +159,7 @@ export class ProgramService {
                   this.workout = new Workout(response.result.values[i][0], response.result.values[i][1], response.result.values[i][2],
                     response.result.values[i][3], response.result.values[i][4], response.result.values[i][5], response.result.values[i][6],
                     response.result.values[i][7], response.result.values[i][8], response.result.values[i][9],
-                    response.result.values[i][10], response.result.values[i][11], response.result.values[i][12])
+                    response.result.values[i][10], response.result.values[i][11], response.result.values[i][12], i+1);
                 }
                 this.emitWorkout();
               }

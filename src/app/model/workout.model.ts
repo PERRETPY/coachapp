@@ -12,9 +12,10 @@ export class Workout {
   public dateFinReelle: String;
   public commentaire: String;
   public feedback: String;
+  public range: Number;
   
   constructor(codeModule, titre, description, dureeEstime, type, lienDocument, etat, 
-      dateDebutPrevue, dateDebutReelle, dateFinPrevue, dateFinReelle, commentaire, feedback) {
+      dateDebutPrevue, dateDebutReelle, dateFinPrevue, dateFinReelle, commentaire, feedback, range) {
         this.codeModule = codeModule;
         this.titre = titre;
         this.description = description;
@@ -28,5 +29,6 @@ export class Workout {
         this.dateFinReelle = dateFinReelle;
         this.commentaire = commentaire;
         this.feedback = feedback;
+        this.range = range;
   }
 }

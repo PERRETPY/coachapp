@@ -6,11 +6,13 @@ import {ProgramService} from "../../../service/program.service";
 import Util from "../../../util/util";
 import {AuthenticatorService} from "../../../service/authenticator.service";
 import {Coach} from "../../../model/coach.model";
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-workout-detail',
   templateUrl: './workout-detail.component.html',
-  styleUrls: ['./workout-detail.component.scss']
+  styleUrls: ['./workout-detail.component.scss'],
+  providers: [DatePipe]
 })
 export class WorkoutDetailComponent implements OnInit {
   workoutId: string = '';
@@ -26,7 +28,8 @@ export class WorkoutDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private programService: ProgramService,
               private cd: ChangeDetectorRef,
-              private authenticatorService: AuthenticatorService) { }
+              private authenticatorService: AuthenticatorService,
+              private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     const workoutIdEncode = this.route.snapshot.params['id'];
@@ -63,16 +66,72 @@ export class WorkoutDetailComponent implements OnInit {
   onSubmitCommentaire() {
     //Vérification que le commentaire a changé
     if(this.commentaire !== this.workout.commentaire) {
-      //MAJ du Workout
+      gapi.client.sheets.spreadsheets.values.update({
+        spreadsheetId: localStorage.getItem('sheetId'),
+        range:'Exercices!L' + this.workout.range,
+        valueInputOption: 'RAW',
+        resource: {
+          values: [
+            [this.commentaire]
+          ]
+        }
+      }).then(this.cd.detectChanges());
+      console.log(this.commentaire);
 
       //Send notification to the coach
       this.authenticatorService.sendEmail(this.coachInfo.mail.toString(), 'Nouveau commentaire sur l\'exercice'+this.workout.titre, this.workout.description.toString());
     }
-    console.log(this.workout.commentaire);
+    
     //this.authenticatorService.sendEmail();
   }
 
   onChangeState(newState: string) {
-
+    const date = new Date();
+    const dateToString = this.datePipe.transform(date,"dd/MM/yyyy");
+    gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: localStorage.getItem('sheetId'),
+      range:'Exercices!G' + this.workout.range,
+      valueInputOption: 'RAW',
+      resource: {
+        values: [
+          [newState]
+        ]
+      }
+    }).then(this.cd.detectChanges());
+    if(newState == "En cours") {
+      gapi.client.sheets.spreadsheets.values.update({
+        spreadsheetId: localStorage.getItem('sheetId'),
+        range:'Exercices!I' + this.workout.range,
+        valueInputOption: 'RAW',
+        resource: {
+          values: [
+            [dateToString]
+          ]
+        }
+      }).then(this.cd.detectChanges());
+      gapi.client.sheets.spreadsheets.values.update({
+        spreadsheetId: localStorage.getItem('sheetId'),
+        range:'Exercices!K' + this.workout.range,
+        valueInputOption: 'RAW',
+        resource: {
+          values: [
+            [""]
+          ]
+        }
+      }).then(this.cd.detectChanges());
+    }
+    if(newState == "terminé") {
+      gapi.client.sheets.spreadsheets.values.update({
+        spreadsheetId: localStorage.getItem('sheetId'),
+        range:'Exercices!K' + this.workout.range,
+        valueInputOption: 'RAW',
+        resource: {
+          values: [
+            [dateToString]
+          ]
+        }
+      }).then(this.cd.detectChanges());
+    }
+    this.ngOnInit();
   }
 }
