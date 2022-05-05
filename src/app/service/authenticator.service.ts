@@ -83,4 +83,65 @@ export class AuthenticatorService {
   destroySheetId(): void {
     localStorage.removeItem('sheetId');
   }
+
+
+  sendEmail(to: string, subject: string, corps: string) {
+    const scopes = [
+      'https://www.googleapis.com/auth/gmail.send',
+    ].join(' ');
+
+    const message =
+      "From: pierreyves.perret@gmail.com\r\n" +
+      "To: "+to+"\r\n" +
+      "Subject: "+subject+"\r\n\r\n" +
+      corps;
+
+    const encodedMessage = btoa(message)
+
+    const reallyEncodedMessage = encodedMessage.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+
+    this.loadClient().then(
+      () => {
+        this.loadGmail().then(
+          () => {
+            gapi.client.gmail.users.messages.send({
+              'userId': this.user.id,
+              'resource': {
+                'raw': reallyEncodedMessage
+              }
+            }).then(res => {
+              console.log("done!", res)
+            },
+              (error) => {
+              console.log(error);
+              });
+          }
+        )
+      }
+    );
+
+  }
+
+  public async loadClient() {
+    let p = new Promise<void>((resolve) => {
+      gapi.load("client:auth2", () => {
+          resolve();
+        },
+        (error) => {
+          console.log("Error loading client: "
+            + JSON.stringify(error));
+        });
+    });
+    return p;
+  }
+
+  public async loadGmail() {
+    let p = new Promise<void>((resolve) => {
+      gapi.client.load('gmail', 'v1', () => {
+        resolve();
+      })
+    });
+    return p;
+  }
+
 }
