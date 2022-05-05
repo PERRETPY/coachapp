@@ -1,8 +1,10 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, NgZone, OnInit} from '@angular/core';
 import {Module} from "../../model/module.model";
 import {Subscription} from "rxjs";
 import {ProgramService} from "../../service/program.service";
 import {Workout} from "../../model/workout.model";
+import Util from '../../util/util';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-trophy',
@@ -19,7 +21,9 @@ export class TrophyComponent implements OnInit {
   listChallenge: Workout[];
 
   constructor(private programService: ProgramService,
-              private cd: ChangeDetectorRef) { }
+              private cd: ChangeDetectorRef,
+              private router: Router,
+              private zone: NgZone) { }
 
   ngOnInit(): void {
     this.listModulesSubscription = this.programService.listModulesSubject.subscribe(
@@ -82,5 +86,14 @@ export class TrophyComponent implements OnInit {
     this.listChallenge = this.listWorkouts.filter(
       workout => workout.type === 'Défi'
     )
+  }
+
+  onChallengeClick(challenge: Workout) {
+    const str: string = challenge.codeModule + ';' + challenge.titre + ';' + challenge.dateDebutPrevue;
+    const encode: string = Util.hexEncode(str);
+
+    this.zone.run(() => {
+      this.router.navigate(['/workout/'+encode]);
+    });
   }
 }

@@ -37,3 +37,17 @@
   align-items: flex-start;
   align-content: flex-start;
 }
+
+.card-body-header {
+  display: flex;
+  align-items: flex-start;
+  column-gap: .3em;
+}
+
+.icon {
+  width: 2em;
+}
+
+.card-challenge {
+  cursor: pointer;
+}

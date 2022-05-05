@@ -3,6 +3,7 @@ import {Workout} from "../../../model/workout.model";
 import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs";
 import {ProgramService} from "../../../service/program.service";
+import Util from "../../../util/util";
 
 @Component({
   selector: 'app-workout-detail',
@@ -21,7 +22,7 @@ export class WorkoutDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const workoutIdEncode = this.route.snapshot.params['id'];
-    this.workoutId = this.hexDecode(workoutIdEncode);
+    this.workoutId = Util.hexDecode(workoutIdEncode);
 
     const workoutInfo = this.workoutId.split(';');
 
@@ -37,15 +38,6 @@ export class WorkoutDetailComponent implements OnInit {
     );
     this.programService.emitWorkout();
     this.programService.getWorkoutById(codeModule, titre, dateDebutPrevue);
-  }
-
-  hexDecode(str1) {
-    let hex  = str1.toString();
-    let str = '';
-    for (var n = 0; n < hex.length; n += 2) {
-      str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
-    }
-    return str;
   }
 
 

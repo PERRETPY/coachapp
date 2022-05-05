@@ -1,6 +1,7 @@
 import {Component, Input, NgZone, OnInit} from '@angular/core';
 import {Workout} from "../../../model/workout.model";
 import {Router} from "@angular/router";
+import Util from "../../../util/util";
 
 @Component({
   selector: 'app-workout-list',
@@ -19,18 +20,10 @@ export class WorkoutListComponent implements OnInit {
 
   onWorkoutClick(workout: Workout) {
     const decodeId: string = workout.codeModule + ';' + workout.titre + ';' + workout.dateDebutPrevue;
-    const encodeId: string = this.hexEncode(decodeId);
+    const encodeId: string = Util.hexEncode(decodeId);
     this.zone.run(() => {
       this.router.navigate(['/workout/'+encodeId]);
     });
-  }
-
-  hexEncode(str) {
-    let result = '';
-    for (let i=0; i<str.length; i++) {
-      result += str.charCodeAt(i).toString(16);
-    }
-    return result;
   }
 
 }
