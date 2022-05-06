@@ -17,11 +17,16 @@ declare global {
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  workoutList: Workout[] = [];
+  allWorkoutList: Workout[] = [];
   workoutSubscription: Subscription;
+
+  filterWorkoutList: Workout[] = [];
 
   user: SocialUser;
   userSubscription: Subscription;
+
+  filterProperties: string[] = ["tous", "non commencé", "En cours", "terminé"];
+  stateFilter: string = 'tous';
 
   public isSignedIn: boolean = false;
   public googleDisplay = "block";
@@ -38,7 +43,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.workoutList = [];
+    this.allWorkoutList = [];
+    this.filterWorkoutList = [];
     this.userSubscription = this.authenticatorService.userSubject.subscribe(
       (user: any) => {
         this.user = user;
@@ -64,11 +70,13 @@ export class HomeComponent implements OnInit {
   }
 
   getWorkoutList() {
-    this.workoutList = [];
+    this.allWorkoutList = [];
+    this.filterWorkoutList = [];
     this.workoutSubscription = this.programService.listWorkoutSubject.subscribe(
       (workoutList) => {
-        this.workoutList = workoutList;
-        if(this.workoutList) {
+        this.allWorkoutList = workoutList;
+        if(this.allWorkoutList) {
+          this.filterWorkoutList = this.allWorkoutList;
           this.loaded = true;
           this.cd.detectChanges();
         }
@@ -77,6 +85,44 @@ export class HomeComponent implements OnInit {
     );
     this.programService.emitWorkouts();
     this.programService.getWorkouts();
+  }
+
+  onFilterWorkouts() {
+    if(this.stateFilter !== 'tous') {
+      this.filterWorkoutList = this.allWorkoutList.filter(
+        workout => workout.etat === this.stateFilter);
+    }else {
+      this.filterWorkoutList = this.allWorkoutList;
+    }
+  }
+
+  onSortWorkouts(sortProperty: string, sortDirection: string) {
+    if(sortProperty === 'etat') {
+      if(sortDirection === 'asc') {
+        this.filterWorkoutList = this.filterWorkoutList.sort(
+          (a, b) => a.etat > b.etat ? 1 : -1
+        );
+      }else if(sortDirection === 'desc') {
+        this.filterWorkoutList = this.filterWorkoutList.sort(
+          (a, b) => a.etat > b.etat ? -1 : 1
+        );
+      }
+    }else if(sortProperty === 'dateDebutReelle') {
+      if(sortDirection === 'asc') {
+        this.filterWorkoutList = this.filterWorkoutList.sort(
+          (a, b) => a.dateDebutReelle > b.dateDebutReelle ? 1 : -1
+        );
+      }else if(sortDirection === 'desc') {
+        this.filterWorkoutList = this.filterWorkoutList.sort(
+          (a, b) => a.dateDebutReelle > b.dateDebutReelle ? -1 : 1
+        );
+      }
+    }
+  }
+
+  onSearchWorkouts(search: string) {
+    this.filterWorkoutList = this.filterWorkoutList.filter(
+      workout => workout.titre.includes(search) || workout.description.includes(search));
   }
 
 }

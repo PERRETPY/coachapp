@@ -45,3 +45,23 @@
 .sort-select {
   max-width: 200px;
 }
+
+.content {
+  //height: 60vh;
+  //overflow: scroll;
+}
+
+.filter-container {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  width: 100%;
+  padding: 1em;
+  box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, .2);
+  border-radius: .5em;
+
+  display: flex;
+}
+
+.form-select {
+  width: 10%;
+}
