@@ -3,10 +3,11 @@
   margin-top: 2em;
   margin-bottom: 2em;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .left-content {
-  width: 75%;
+  max-width: 70%;
   padding: 1em;
 
   display: flex;
@@ -26,8 +27,9 @@
   border-left: solid black .1em;
 }
 
+
 .right-content {
-  width: 25%;
+  max-width: 20%;
   padding: 1em;
 
   display: flex;
@@ -51,4 +53,54 @@
 
 .card-challenge {
   cursor: pointer;
+}
+
+.card {
+  min-width: 20em;
+}
+
+@media only screen and (max-width: 1200px) {
+  .left-content {
+    max-width: 50%;
+  }
+  .right-content {
+    max-width: 45%;
+  }
+}
+
+
+@media only screen and (max-width: 800px) {
+  .center-div {
+    border-left: none;
+    border-top: solid black .1em;
+    width: 100%;
+  }
+  .right-content {
+    max-width: 100%;
+    padding: 1em;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 2em;
+    align-items: flex-start;
+    align-content: flex-start;
+  }
+  .left-content {
+    max-width: 100%;
+    padding: 1em;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 2em;
+    align-items: flex-start;
+    align-content: flex-start;
+
+  }
+  .card {
+    width: 100%;
+  }
 }
