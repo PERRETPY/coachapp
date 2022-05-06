@@ -50,7 +50,6 @@ export class WorkoutDetailComponent implements OnInit {
         this.cd.detectChanges();
       }
     );
-    this.programService.emitWorkout();
     this.programService.getWorkoutById(codeModule, titre, dateDebutPrevue);
 
     this.coachInfoSubscription = this.programService.infoCoachSubject.subscribe(
@@ -75,13 +74,16 @@ export class WorkoutDetailComponent implements OnInit {
             [this.commentaire]
           ]
         }
-      }).then(this.cd.detectChanges());
-      console.log(this.commentaire);
+      }).then(
+        () => {
+          this.cd.detectChanges();
+          this.workout.commentaire = this.commentaire;
+        });
 
       //Send notification to the coach
-      this.authenticatorService.sendEmail(this.coachInfo.mail.toString(), 'Nouveau commentaire sur l\'exercice'+this.workout.titre, this.workout.description.toString());
+      this.authenticatorService.sendEmail(this.coachInfo.mail.toString(), 'Nouveau commentaire sur l\'exercice '+this.workout.titre, this.workout.commentaire.toString());
     }
-    
+
     //this.authenticatorService.sendEmail();
   }
 
