@@ -25,9 +25,12 @@ export class ProgramService {
   workout: Workout;
   workoutSubject: Subject<Workout> = new Subject<Workout>();
 
+  traductionMap: Map<string, string> = new Map();
+  traductionMapSubject: Subject<Map<string, string>> = new Subject<Map<string, string>>();
+
   constructor() { }
 
-  public getMetaDonnees() {
+  getMetaDonnees() {
     this.loadClient().then(
       () => {
         this.loadSheetsAPI().then(
@@ -46,9 +49,36 @@ export class ProgramService {
       });
   }
 
-  public emitMetaDonnees(): void {
+  emitMetaDonnees(): void {
     const infosMetaDonnees = this.infosMetaDonnees;
     this.infosMetaDonneesSubject.next(infosMetaDonnees);
+  }
+
+  getTraduction() {
+    this.traductionMap.clear();
+    this.loadClient().then(
+      () => {
+        this.loadSheetsAPI().then(
+          () => {
+            gapi.client.sheets.spreadsheets.values.get({
+              spreadsheetId: localStorage.getItem('sheetId'),
+              range: 'Traductions!A1:B'
+            }).then((response) => {
+              for (let i = 1; i < response.result.values.length; i++) {
+                console.log('here');
+                this.traductionMap.set(response.result.values[i][0], response.result.values[i][1])
+              }
+              this.emitTraduction();
+            }, (error) => {
+              console.log('Erreur :' + error);
+            });
+          });
+      });
+  }
+
+  emitTraduction(): void {
+    const traductionMap = this.traductionMap;
+    this.traductionMapSubject.next(traductionMap);
   }
 
   getListModules () {

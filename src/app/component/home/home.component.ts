@@ -25,6 +25,9 @@ export class HomeComponent implements OnInit {
   user: SocialUser;
   userSubscription: Subscription;
 
+  traductionMap: Map<string, string> = new Map<string, string>();
+  traductionMapSubscription: Subscription;
+
   filterProperties: string[] = ["tous", "non commencé", "en cours", "terminé"];
   sortProperties: string[] = ["État ascendant", "État descendant", "Date ascendant", 'Date descendant'];
   stateFilter: string = 'tous';
@@ -49,6 +52,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.allWorkoutList = [];
     this.filterWorkoutList = [];
+    this.getTraductionMap();
     this.userSubscription = this.authenticatorService.userSubject.subscribe(
       (user: any) => {
         this.user = user;
@@ -97,6 +101,16 @@ export class HomeComponent implements OnInit {
     );
     this.programService.emitWorkouts();
     this.programService.getWorkouts();
+  }
+
+  getTraductionMap() {
+    this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
+      (traductionMap) => {
+        this.traductionMap = traductionMap;
+      }
+    );
+    this.programService.emitTraduction();
+    this.programService.getTraduction();
   }
 
   onFilterWorkouts() {

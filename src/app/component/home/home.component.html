@@ -1,29 +1,29 @@
-<div class="container">
+<div class="container" *ngIf="traductionMap">
   <div *ngIf="user">
 
     <form (ngSubmit)="onSubmit()">
-      <label>Lien du document Google sheet</label>
+      <label>{{ traductionMap.get('spreadsheet_input_label') }}</label>
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2" required [(ngModel)]="sheetUrl" name="sheetId" [placeholder]="this.spreadSheetIsSet() ? 'Le lien est déjà enregistré' : ''">
-        <button class="btn btn-success" type="submit" id="button-addon2">Valider</button>
+        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2" required [(ngModel)]="sheetUrl" name="sheetId" [placeholder]="this.spreadSheetIsSet() ? traductionMap.get('spreadsheet_input_placeholder') : ''">
+        <button class="btn btn-success" type="submit" id="button-addon2">{{ traductionMap.get('spreadsheet_input_button_label') }}</button>
       </div>
     </form>
 
     <div *ngIf="!spreadSheetIsSet()">
-      <p>Merci de renseigner le lien du google sheet</p>
+      <p>{{ traductionMap.get('no_spreadsheetSet_label') }}</p>
     </div>
 
     <div *ngIf="spreadSheetIsSet() && allWorkoutList">
       <div class="filter-container">
         <div class="left-content">
           <div class="filter">
-            <p>Filtrer par</p>
+            <p>{{ traductionMap.get('filter_label') }}</p>
             <select class="form-select" aria-label="Default select example" [(ngModel)]="stateFilter" (change)="onFilterWorkouts()">
               <option *ngFor="let property of filterProperties" [value]="property">{{ property }}</option>
             </select>
           </div>
           <div class="sort">
-            <p>Trier par</p>
+            <p>{{ traductionMap.get('sort_label') }}</p>
             <select class="form-select" aria-label="Default select example" [(ngModel)]="sortProperty" (change)="onSortWorkouts()">
               <option *ngFor="let property of sortProperties" [value]="property">{{ property }}</option>
             </select>
@@ -32,8 +32,8 @@
         <div class="right-content">
           <form (ngSubmit)="onSearchWorkouts()">
             <div class="input-group search-input">
-              <input type="text" class="form-control" required [(ngModel)]="search" name="sheetId" placeholder="Rechercher un entrainement">
-              <button class="btn btn-primary" type="submit" id="search">Chercher</button>
+              <input type="text" class="form-control" required [(ngModel)]="search" name="sheetId" [placeholder]="traductionMap.get('workout_search_placeholder')">
+              <button class="btn btn-primary" type="submit" id="search">{{ traductionMap.get('workout_search_button_label') }}</button>
             </div>
           </form>
         </div>
@@ -47,6 +47,6 @@
 
   </div>
   <div *ngIf="!user">
-    Merci de vous connecter à l'aide de votre compte Google !
+    {{ traductionMap.get('notLogin_label') }}
   </div>
 </div>
