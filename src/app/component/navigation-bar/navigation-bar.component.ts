@@ -3,6 +3,8 @@ import {AuthenticatorService} from "../../service/authenticator.service";
 import {SocialUser} from "angularx-social-login";
 import {Subscription} from "rxjs";
 import {Router} from "@angular/router";
+import {ProgramService} from "../../service/program.service";
+import {MetaDonnees} from "../../model/metadonnees.model";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -13,15 +15,20 @@ export class NavigationBarComponent implements OnInit {
   user: SocialUser;
   userSubscription: Subscription;
 
+  infosMetaDonnees: MetaDonnees;
+  infosMetaDonneesSubscription: Subscription = new Subscription();
+
 
   constructor(private cd: ChangeDetectorRef,
               private authenticatorService: AuthenticatorService,
-              private router: Router) { }
+              private router: Router,
+              private programService: ProgramService) { }
 
   ngOnInit(): void {
     this.userSubscription = this.authenticatorService.userSubject.subscribe(
       (user: any) => {
         this.user = user;
+        this.getInfosMetaDonnees();
       }
     );
     this.authenticatorService.emitUserSubject();
@@ -37,4 +44,14 @@ export class NavigationBarComponent implements OnInit {
     this.router.navigate(['/']).then();
   }
 
+  private getInfosMetaDonnees() {
+    this.infosMetaDonneesSubscription = this.programService.infosMetaDonneesSubject.subscribe(
+      (infoMetaDonnees) => {
+        this.infosMetaDonnees = infoMetaDonnees;
+      }
+    );
+    this.programService.emitMetaDonnees();
+    this.programService.getMetaDonnees();
+    this.cd.detectChanges();
+  }
 }
