@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
   sortProperties: string[] = ["État ascendant", "État descendant", "Date ascendant", 'Date descendant'];
   stateFilter: string = 'tous';
   sortProperty: string = 'Date ascendant';
+  search: string = '';
 
   public isSignedIn: boolean = false;
   public googleDisplay = "block";
@@ -133,8 +134,16 @@ export class HomeComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  onSearchWorkouts(search: string) {
-    this.filterWorkoutList = this.filterWorkoutList.filter(
-      workout => workout.titre.includes(search) || workout.description.includes(search));
+  onSearchWorkouts() {
+    if(this.search === '') {
+      this.filterWorkoutList = this.allWorkoutList;
+      this.onFilterWorkouts();
+    } else {
+      this.filterWorkoutList = this.allWorkoutList;
+      this.onFilterWorkouts();
+      this.filterWorkoutList = this.filterWorkoutList.filter(
+        workout => workout.titre.toLowerCase().includes(this.search.toLowerCase()) || workout.description.toLowerCase().includes(this.search.toLowerCase()));
+    }
+    this.cd.detectChanges();
   }
 }
