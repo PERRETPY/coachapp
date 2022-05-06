@@ -238,6 +238,7 @@ export class ProgramService {
       gapi.client.load(
         'https://sheets.googleapis.com/$discovery/rest?version=v4')
         .then(() => {
+          console.log('Sheet API loaded');
             resolve();
           },
           (error) => {

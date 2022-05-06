@@ -68,14 +68,18 @@ export class HomeComponent implements OnInit {
     const urlArray = this.sheetUrl.split('/');
     this.model.sheetId = urlArray[5]
     console.log(this.model.sheetId);
-    this.programService.setSpreadsheets(this.model.sheetId).then(
+    this.programService.loadSheetsAPI().then(
       () => {
-        if(this.spreadSheetIsSet()) {
-          console.log('Lets go');
-          this.getWorkoutList();
-          this.cd.detectChanges();
-          location.reload();
-        }
+        this.programService.setSpreadsheets(this.model.sheetId).then(
+          () => {
+            if(this.spreadSheetIsSet()) {
+              console.log('Lets go');
+              this.getWorkoutList();
+              this.cd.detectChanges();
+              location.reload();
+            }
+          }
+        );
       }
     );
   }
