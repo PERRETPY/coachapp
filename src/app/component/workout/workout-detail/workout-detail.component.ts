@@ -32,6 +32,8 @@ export class WorkoutDetailComponent implements OnInit {
               private datePipe: DatePipe) { }
 
   ngOnInit(): void {
+    this.workout = null;
+    this.commentaire = '';
     const workoutIdEncode = this.route.snapshot.params['id'];
     this.workoutId = Util.hexDecode(workoutIdEncode);
 
@@ -45,6 +47,7 @@ export class WorkoutDetailComponent implements OnInit {
       (workout) => {
         this.workout = workout;
         if(this.workout && this.workout.commentaire) {
+          console.log(workout);
           this.commentaire = this.workout.commentaire.toString();
         }
         this.cd.detectChanges();

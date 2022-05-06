@@ -136,6 +136,8 @@ export class ProgramService {
   }
 
   getWorkoutById(codeModule: String, titre: String, dateDebutPrevue: String): void {
+    this.workout = null;
+    this.emitWorkout();
     console.log('hello from here');
     this.loadClient().then(
       () => {
@@ -148,8 +150,6 @@ export class ProgramService {
               range: 'Exercices!A1:N'
             }).then((response) => {
               for (let i = 1; i < response.result.values.length; i++) {
-                console.log('boucle');
-                console.log(response.result.values[i][0]);
                 if(codeModule === response.result.values[i][0]
                 && titre === response.result.values[i][1]
                 && dateDebutPrevue === response.result.values[i][7]) {

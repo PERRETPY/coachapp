@@ -28,7 +28,9 @@ export class NavigationBarComponent implements OnInit {
     this.userSubscription = this.authenticatorService.userSubject.subscribe(
       (user: any) => {
         this.user = user;
-        this.getInfosMetaDonnees();
+        if(this.user && this.spreadSheetIsSet()) {
+          this.getInfosMetaDonnees();
+        }
       }
     );
     this.authenticatorService.emitUserSubject();
@@ -52,5 +54,9 @@ export class NavigationBarComponent implements OnInit {
     this.programService.emitMetaDonnees();
     this.programService.getMetaDonnees();
     this.cd.detectChanges();
+  }
+
+  spreadSheetIsSet(): boolean {
+    return localStorage.getItem('sheetId') && true;
   }
 }
