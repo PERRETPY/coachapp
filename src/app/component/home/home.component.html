@@ -1,10 +1,10 @@
 <div class="container">
   <div *ngIf="user">
 
-    <form (ngSubmit)="onSubmit()" #demoForm="ngForm">
+    <form (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label>ID du document (le long texte situé entre le /d/ et le /edit/ dans le lien)</label>
-        <input type="text" class="form-control" id="sheetId" required [(ngModel)]="model.sheetId" name="sheetId" #sheetId="ngModel">
+        <label>Lien du document Google sheet</label>
+        <input type="text" class="form-control" id="sheetId" required [(ngModel)]="sheetUrl" name="sheetId" [placeholder]="this.spreadSheetIsSet() ? 'Le lien est déjà enregistré' : ''">
       </div>
 
       <button type="submit" class="btn btn-success">Submit</button>

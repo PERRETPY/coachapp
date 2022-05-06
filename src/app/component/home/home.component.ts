@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
   public googleDisplay = "block";
   public model = new SheetModel();
   public output: string;
+  sheetUrl: string;
 
   loaded: boolean = false;
 
@@ -59,6 +60,9 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmit() {
+    const urlArray = this.sheetUrl.split('/');
+    this.model.sheetId = urlArray[5]
+    console.log(this.model.sheetId);
     this.programService.setSpreadsheets(this.model.sheetId).then(
       () => {
         this.getWorkoutList();
