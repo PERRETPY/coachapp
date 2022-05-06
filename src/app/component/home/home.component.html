@@ -17,9 +17,18 @@
 
     <div *ngIf="spreadSheetIsSet()">
       <div class="filter-container">
-        <select class="form-select" aria-label="Default select example" [(ngModel)]="stateFilter" (change)="onFilterWorkouts()">
-          <option *ngFor="let property of filterProperties" [value]="property">{{ property }}</option>
-        </select>
+        <div class="filter">
+          <p>Filtrer par</p>
+          <select class="form-select" aria-label="Default select example" [(ngModel)]="stateFilter" (change)="onFilterWorkouts()">
+            <option *ngFor="let property of filterProperties" [value]="property">{{ property }}</option>
+          </select>
+        </div>
+        <div class="sort">
+          <p>Trier par</p>
+          <select class="form-select" aria-label="Default select example" [(ngModel)]="sortProperty" (change)="onSortWorkouts()">
+            <option *ngFor="let property of sortProperties" [value]="property">{{ property }}</option>
+          </select>
+        </div>
       </div>
       <div class="content">
         <app-workout-list [workoutList]="filterWorkoutList"></app-workout-list>

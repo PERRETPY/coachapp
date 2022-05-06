@@ -7,8 +7,8 @@
       </div>
       <div class="right-content">
         <div class="right-header-content">
-          <button class="btn btn-success" *ngIf="workout.etat === 'non commencé' || workout.etat === 'terminé'" (click)="onChangeState('En cours')">Commencer</button>
-          <button class="btn btn-danger" *ngIf="workout.etat === 'En cours'" (click)="onChangeState('terminé')">Terminer</button>
+          <button class="btn btn-success" *ngIf="workout.etat === 'non commencé' || workout.etat === 'terminé'" (click)="onChangeState('en cours')">Commencer</button>
+          <button class="btn btn-danger" *ngIf="workout.etat === 'en cours'" (click)="onChangeState('terminé')">Terminer</button>
         </div>
         <div class="right-content-values">
           <ul>

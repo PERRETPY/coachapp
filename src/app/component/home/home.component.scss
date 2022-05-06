@@ -31,16 +31,6 @@
   overflow: scroll;
 }
 
-.filter {
-  margin-top: 1em;
-  width: 100%;
-  border-radius: .2em;
-  box-shadow: 3px 3px 10px 1px rgba(0, 0, 0, .1);
-  padding: .5em;
-
-  display: flex;
-  align-items: center;
-}
 
 .sort-select {
   max-width: 200px;
@@ -64,4 +54,5 @@
 
 .form-select {
   width: 10%;
+  min-width: 8em;
 }

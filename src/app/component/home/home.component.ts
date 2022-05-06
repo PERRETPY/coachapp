@@ -25,8 +25,10 @@ export class HomeComponent implements OnInit {
   user: SocialUser;
   userSubscription: Subscription;
 
-  filterProperties: string[] = ["tous", "non commencé", "En cours", "terminé"];
+  filterProperties: string[] = ["tous", "non commencé", "en cours", "terminé"];
+  sortProperties: string[] = ["État ascendant", "État descendant", "Date ascendant", 'Date descendant'];
   stateFilter: string = 'tous';
+  sortProperty: string = 'État ascendant';
 
   public isSignedIn: boolean = false;
   public googleDisplay = "block";
@@ -96,27 +98,25 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onSortWorkouts(sortProperty: string, sortDirection: string) {
-    if(sortProperty === 'etat') {
-      if(sortDirection === 'asc') {
-        this.filterWorkoutList = this.filterWorkoutList.sort(
-          (a, b) => a.etat > b.etat ? 1 : -1
-        );
-      }else if(sortDirection === 'desc') {
-        this.filterWorkoutList = this.filterWorkoutList.sort(
-          (a, b) => a.etat > b.etat ? -1 : 1
-        );
-      }
-    }else if(sortProperty === 'dateDebutReelle') {
-      if(sortDirection === 'asc') {
-        this.filterWorkoutList = this.filterWorkoutList.sort(
-          (a, b) => a.dateDebutReelle > b.dateDebutReelle ? 1 : -1
-        );
-      }else if(sortDirection === 'desc') {
-        this.filterWorkoutList = this.filterWorkoutList.sort(
-          (a, b) => a.dateDebutReelle > b.dateDebutReelle ? -1 : 1
-        );
-      }
+  onSortWorkouts() {
+    if(this.sortProperty === 'État ascendant') {
+      this.filterWorkoutList.sort(
+        (a, b) => a.etat > b.etat ? -1 : a.etat < b.etat ? 1 : 0
+
+    );
+    }else if(this.sortProperty === 'État descendant') {
+      this.filterWorkoutList.sort(
+        (a, b) => a.etat < b.etat ? -1 : a.etat > b.etat ? 1 : 0
+
+    );
+    }else if(this.sortProperty === 'Date ascendant') {
+      this.filterWorkoutList.sort(
+        (a, b) => a.dateDebutReelle > b.dateDebutReelle ? -1 : a.dateDebutReelle < b.dateDebutReelle ? 1 : 0
+      );
+    }else if(this.sortProperty === 'Date descendant') {
+      this.filterWorkoutList.sort(
+        (a, b) => a.dateDebutReelle < b.dateDebutReelle ? -1 : a.dateDebutReelle > b.dateDebutReelle ? 1 : 0
+      );
     }
   }
 

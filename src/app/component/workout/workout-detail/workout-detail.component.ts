@@ -100,7 +100,7 @@ export class WorkoutDetailComponent implements OnInit {
         ]
       }
     }).then(this.cd.detectChanges());
-    if(newState == "En cours") {
+    if(newState == "en cours") {
       gapi.client.sheets.spreadsheets.values.update({
         spreadsheetId: localStorage.getItem('sheetId'),
         range:'Exercices!I' + this.workout.range,
