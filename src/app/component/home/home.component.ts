@@ -69,6 +69,7 @@ export class HomeComponent implements OnInit {
           console.log('Lets go');
           this.getWorkoutList();
           this.cd.detectChanges();
+          location.reload();
         }
       }
     );
