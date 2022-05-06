@@ -3,7 +3,7 @@
     <div class="column-content">
       <div class="left-content">
         <h1>{{ workout.titre }}</h1>
-        <p>{{ workout.description }}</p>
+        <p *ngIf="workout.description">{{ workout.description }}</p>
       </div>
       <div class="right-content">
         <div class="right-header-content">

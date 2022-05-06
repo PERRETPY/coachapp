@@ -44,7 +44,7 @@ export class WorkoutDetailComponent implements OnInit {
     this.workoutSubscription = this.programService.workoutSubject.subscribe(
       (workout) => {
         this.workout = workout;
-        if(this.workout) {
+        if(this.workout && this.workout.commentaire) {
           this.commentaire = this.workout.commentaire.toString();
         }
         this.cd.detectChanges();

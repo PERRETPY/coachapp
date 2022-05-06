@@ -2,13 +2,11 @@
   <div *ngIf="user">
 
     <form (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label>Lien du document Google sheet</label>
-        <input type="text" class="form-control" id="sheetId" required [(ngModel)]="sheetUrl" name="sheetId" [placeholder]="this.spreadSheetIsSet() ? 'Le lien est déjà enregistré' : ''">
+      <label>Lien du document Google sheet</label>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2" required [(ngModel)]="sheetUrl" name="sheetId" [placeholder]="this.spreadSheetIsSet() ? 'Le lien est déjà enregistré' : ''">
+        <button class="btn btn-success" type="submit" id="button-addon2">Submit</button>
       </div>
-
-      <button type="submit" class="btn btn-success">Submit</button>
-
     </form>
 
     <div *ngIf="!spreadSheetIsSet()">

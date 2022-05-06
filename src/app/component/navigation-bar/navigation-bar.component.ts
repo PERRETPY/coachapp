@@ -41,7 +41,7 @@ export class NavigationBarComponent implements OnInit {
   onSignOut() {
     this.authenticatorService.signOut();
     this.user = null;
-    this.router.navigate(['/']).then();
+    this.router.navigate(['/']).then(() => location.reload());
   }
 
   private getInfosMetaDonnees() {

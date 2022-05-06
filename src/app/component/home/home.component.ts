@@ -128,5 +128,4 @@ export class HomeComponent implements OnInit {
     this.filterWorkoutList = this.filterWorkoutList.filter(
       workout => workout.titre.includes(search) || workout.description.includes(search));
   }
-
 }
