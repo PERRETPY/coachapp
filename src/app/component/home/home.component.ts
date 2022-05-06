@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   filterProperties: string[] = ["tous", "non commencé", "en cours", "terminé"];
   sortProperties: string[] = ["État ascendant", "État descendant", "Date ascendant", 'Date descendant'];
   stateFilter: string = 'tous';
-  sortProperty: string = 'État ascendant';
+  sortProperty: string = 'Date ascendant';
 
   public isSignedIn: boolean = false;
   public googleDisplay = "block";
@@ -87,6 +87,7 @@ export class HomeComponent implements OnInit {
         this.allWorkoutList = workoutList;
         if(this.allWorkoutList) {
           this.filterWorkoutList = this.allWorkoutList;
+          this.onSortWorkouts();
           this.loaded = true;
           this.cd.detectChanges();
         }
@@ -98,34 +99,38 @@ export class HomeComponent implements OnInit {
   }
 
   onFilterWorkouts() {
+    console.log('Filter');
+    console.log(this.stateFilter);
     if(this.stateFilter !== 'tous') {
       this.filterWorkoutList = this.allWorkoutList.filter(
         workout => workout.etat === this.stateFilter);
     }else {
       this.filterWorkoutList = this.allWorkoutList;
     }
+    this.cd.detectChanges();
   }
 
   onSortWorkouts() {
     if(this.sortProperty === 'État ascendant') {
       this.filterWorkoutList.sort(
-        (a, b) => a.etat > b.etat ? -1 : a.etat < b.etat ? 1 : 0
+        (a, b) => a.etat > b.etat ? 1 : a.etat === b.etat ? 0 : -1
 
     );
     }else if(this.sortProperty === 'État descendant') {
       this.filterWorkoutList.sort(
-        (a, b) => a.etat < b.etat ? -1 : a.etat > b.etat ? 1 : 0
+        (a, b) => a.etat < b.etat ? 1 : a.etat === b.etat ? 0 : -1
 
     );
     }else if(this.sortProperty === 'Date ascendant') {
       this.filterWorkoutList.sort(
-        (a, b) => a.dateDebutReelle > b.dateDebutReelle ? -1 : a.dateDebutReelle < b.dateDebutReelle ? 1 : 0
+        (a, b) => a.dateDebutPrevue > b.dateDebutPrevue ? 1 : a.dateDebutPrevue === b.dateDebutPrevue ? 0 : -1
       );
     }else if(this.sortProperty === 'Date descendant') {
       this.filterWorkoutList.sort(
-        (a, b) => a.dateDebutReelle < b.dateDebutReelle ? -1 : a.dateDebutReelle > b.dateDebutReelle ? 1 : 0
+        (a, b) => a.dateDebutPrevue < b.dateDebutPrevue ? 1 : a.dateDebutPrevue === b.dateDebutPrevue ? 0 : -1
       );
     }
+    this.cd.detectChanges();
   }
 
   onSearchWorkouts(search: string) {
