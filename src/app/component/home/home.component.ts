@@ -65,8 +65,11 @@ export class HomeComponent implements OnInit {
     console.log(this.model.sheetId);
     this.programService.setSpreadsheets(this.model.sheetId).then(
       () => {
-        this.getWorkoutList();
-        this.cd.detectChanges();
+        if(this.spreadSheetIsSet()) {
+          console.log('Lets go');
+          this.getWorkoutList();
+          this.cd.detectChanges();
+        }
       }
     );
   }

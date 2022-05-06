@@ -179,12 +179,15 @@ export class ProgramService {
     await this.loadClient();
     await this.loadSheetsAPI();
 
-    gapi.client.sheets.spreadsheets.get({
-      spreadsheetId: sheetId,
-    }).then(() => {
-      localStorage.setItem("sheetId", sheetId);
+    return new Promise<void>((resolve) => {
+      gapi.client.sheets.spreadsheets.get({
+        spreadsheetId: sheetId,
+      }).then(() => {
+        localStorage.setItem("sheetId", sheetId);
+        console.log('SpreadSheet set');
+        resolve();
+      });
     });
-    console.log('SpreadSheet set');
   }
 
   public async loadClient() {
