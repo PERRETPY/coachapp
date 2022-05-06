@@ -2,6 +2,7 @@ import {EventEmitter, Injectable} from '@angular/core';
 import {GoogleLoginProvider, SocialAuthService, SocialUser} from 'angularx-social-login';
 import {Subject} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class AuthenticatorService {
   public signedOut: EventEmitter<void> = new EventEmitter<void>();
 
 
-  constructor(private httpClient: HttpClient, private authService: SocialAuthService) {
+  constructor(private httpClient: HttpClient, private authService: SocialAuthService, private router: Router) {
     this.authService.authState.subscribe(user => {
       this.socialUser = user;
     });
@@ -52,6 +53,7 @@ export class AuthenticatorService {
       this.signedOut.emit();
       this.destroyUser();
       this.emitUserSubject();
+      this.router.navigate(['/']).then(() => location.reload());
     });
   }
 
