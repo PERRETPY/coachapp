@@ -1,6 +1,25 @@
-.head-navbar {
-  width: 100%;
+.navbar {
   height: 5vh;
-  background-color: lightgrey;
+  align-items: center;
+  text-align: center;
+
+}
+
+.navbar-collapse {
   display: flex;
+  justify-content: space-between;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.navbar-nav {
+  display: flex;
+  column-gap: 1em;
+}
+
+img {
+  height: 4vh;
+}
+.nav-item {
+  align-self: center;
 }

@@ -1,7 +1,25 @@
-<div class="head-navbar">
-  <img *ngIf="infosMetaDonnees" [src]="infosMetaDonnees.logo">
-  <p *ngIf="infosMetaDonnees">{{ infosMetaDonnees.nom }}</p>
-  <p *ngIf="user">Bonjour {{ user.firstName }}</p>
-  <button class="btn btn-success" (click)="onSignIn()" *ngIf="!user">Se connecter</button>
-  <button class="btn btn-danger" (click)="onSignOut()" *ngIf="user">Se déconnecter</button>
-</div>
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <div class="navbar-collapse">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <img [src]="infosMetaDonnees.logo" alt="">
+      </li>
+      <li class="nav-item">
+        {{ infosMetaDonnees.nom }}
+      </li>
+      <li class="nav-item">
+        {{ infosMetaDonnees.titre }}
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        {{ user.name }}
+       </li>
+      <li class="nav-item">
+        <button class="btn btn-success" (click)="onSignIn()" *ngIf="!user">Se connecter</button>
+        <button class="btn btn-danger" (click)="onSignOut()" *ngIf="user">Se déconnecter</button>
+      </li>
+    </ul>
+  </div>
+</nav>
+
