@@ -79,7 +79,7 @@ export class TrophyComponent implements OnInit {
       }
     );
 
-    return nbDone / workoutList.length * 100;
+    return Math.round(nbDone / workoutList.length * 100);
   }
 
   private setListChallenge() {
