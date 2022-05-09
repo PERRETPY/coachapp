@@ -61,6 +61,8 @@ export class NavigationBarComponent implements OnInit {
         if(this.user2) {
           this.user = new SocialUser();
           this.user.name = this.user2.getBasicProfile().getName();
+          this.user.email = this.user2.getBasicProfile().getEmail();
+          this.user.id = this.user2.getBasicProfile().getId();
           this.authenticatorService.user = this.user;
           console.log('OK');
           this.cd.detectChanges();

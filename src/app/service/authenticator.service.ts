@@ -88,15 +88,17 @@ export class AuthenticatorService {
 
 
   sendEmail(to: string, subject: string, corps: string) {
+    console.log(this.user.email);
+
     const scopes = [
       'https://www.googleapis.com/auth/gmail.send',
     ].join(' ');
 
     const message =
-      "From: pierreyves.perret@gmail.com\r\n" +
+      "From: " + this.user.email + "\r\n" +
       "To: "+to+"\r\n" +
       "Subject: "+subject+"\r\n\r\n" +
-      corps;
+      this.user.name + ' a commenté : "' + corps + '"';
 
     const encodedMessage = btoa(message)
 
