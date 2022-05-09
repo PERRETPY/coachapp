@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {ProgramService} from "../../service/program.service";
 import {MetaDonnees} from "../../model/metadonnees.model";
 import {GoogleAuthService} from "../../service/google-auth.service";
+import {HomeComponent} from "../home/home.component";
 
 declare global {
   interface Window { onSignIn: (googleuser: any) => void; }
@@ -48,19 +49,28 @@ export class NavigationBarComponent implements OnInit {
   }
 
   onSignIn(googleUser) {
-    this.googleAuthService.onSignIn(googleUser);
+    this.googleAuthService.onSignIn(googleUser).then(
+      () => {
+        this.cd.detectChanges();
+      }
+    );
     this.authenticatorService.signInWithGoogle();
     this.user2Subscription = this.googleAuthService.googleUserSubject.subscribe(
       (user) => {
         this.user2 = user;
-        this.user = new SocialUser();
-        this.user.name = this.user2.getBasicProfile().getName();
-        this.authenticatorService.user = this.user;
+        if(this.user2) {
+          this.user = new SocialUser();
+          this.user.name = this.user2.getBasicProfile().getName();
+          this.authenticatorService.user = this.user;
+          console.log('OK');
+          this.cd.detectChanges();
+        }
         this.authenticatorService.emitUserSubject();
       }
     );
     this.googleAuthService.emitGoogleUser();
     console.log(this.user2.getBasicProfile());
+    this.cd.detectChanges();
   }
 
   onSignOut() {

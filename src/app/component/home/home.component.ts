@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
 
   loaded: boolean = false;
 
-  constructor(private cd: ChangeDetectorRef,
+  constructor(public cd: ChangeDetectorRef,
               public gauth: GoogleAuthService,
               public programService: ProgramService,
               private authenticatorService: AuthenticatorService) {
@@ -52,12 +52,15 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.allWorkoutList = [];
     this.filterWorkoutList = [];
-    this.getTraductionMap();
     this.userSubscription = this.authenticatorService.userSubject.subscribe(
       (user: any) => {
         this.user = user;
+        console.log("detect changes");
+        this.cd.detectChanges();
         if(this.user && this.spreadSheetIsSet()) {
+          this.getTraductionMap();
           this.getWorkoutList();
+          this.cd.detectChanges();
         }
       }
     );
@@ -98,6 +101,7 @@ export class HomeComponent implements OnInit {
           this.filterWorkoutList = this.allWorkoutList;
           this.onSortWorkouts();
           this.loaded = true;
+          console.log("detect changes");
           this.cd.detectChanges();
         }
         this.cd.detectChanges();

@@ -15,11 +15,8 @@
       <li class="nav-item" *ngIf="user">
         {{ user.name }}
        </li>
-      <li class="nav-item" *ngIf="user2">
-        {{ user2.getBasicProfile().getName() }}
-      </li>
       <li class="nav-item">
-        <div class="g-signin2" data-onsuccess="onSignIn" *ngIf="!user">Se connecter</div>
+        <div class="g-signin2" data-onsuccess="onSignIn" *ngIf="!user && !user2">Se connecter</div>
         <button class="btn btn-danger" (click)="onSignOut()" *ngIf="user">Se déconnecter</button>
       </li>
     </ul>

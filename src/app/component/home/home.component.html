@@ -2,10 +2,10 @@
   <div *ngIf="user">
 
     <form (ngSubmit)="onSubmit()">
-      <label>{{ traductionMap.get('spreadsheet_input_label') }}</label>
+      <label>{{ spreadSheetIsSet() ? traductionMap.get('spreadsheet_input_label') : 'Lien du document Google sheet'}}</label>
       <div class="input-group mb-3">
         <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2" required [(ngModel)]="sheetUrl" name="sheetId" [placeholder]="this.spreadSheetIsSet() ? traductionMap.get('spreadsheet_input_placeholder') : ''">
-        <button class="btn btn-success" type="submit" id="button-addon2">{{ traductionMap.get('spreadsheet_input_button_label') }}</button>
+        <button class="btn btn-success" type="submit" id="button-addon2">{{ spreadSheetIsSet() ? traductionMap.get('spreadsheet_input_button_label') : 'Valider' }}</button>
       </div>
     </form>
 

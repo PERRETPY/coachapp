@@ -33,6 +33,9 @@ export class GoogleAuthService {
     this.isSignedIn = true;
     this.googleDisplay = "none";
     this.signIn.emit();
+    return new Promise<void>((resolve) => {
+      resolve();
+    });
   }
 
   emitGoogleUser() {
