@@ -5,6 +5,12 @@ import {Subscription} from "rxjs";
 import {Router} from "@angular/router";
 import {ProgramService} from "../../service/program.service";
 import {MetaDonnees} from "../../model/metadonnees.model";
+import {GoogleAuthService} from "../../service/google-auth.service";
+import {HomeComponent} from "../home/home.component";
+
+declare global {
+  interface Window { onSignIn: (googleuser: any) => void; }
+}
 
 @Component({
   selector: 'app-navigation-bar',
@@ -15,14 +21,20 @@ export class NavigationBarComponent implements OnInit {
   user: SocialUser;
   userSubscription: Subscription;
 
+  user2: any;
+  user2Subscription: Subscription;
+
   infosMetaDonnees: MetaDonnees;
   infosMetaDonneesSubscription: Subscription = new Subscription();
 
 
   constructor(private cd: ChangeDetectorRef,
               private authenticatorService: AuthenticatorService,
+              private googleAuthService: GoogleAuthService,
               private router: Router,
-              private programService: ProgramService) { }
+              private programService: ProgramService) {
+    window.onSignIn = (googleUser) => this.onSignIn(googleUser);
+  }
 
   ngOnInit(): void {
     this.userSubscription = this.authenticatorService.userSubject.subscribe(
@@ -36,8 +48,29 @@ export class NavigationBarComponent implements OnInit {
     this.authenticatorService.emitUserSubject();
   }
 
-  onSignIn() {
+  onSignIn(googleUser) {
+    this.googleAuthService.onSignIn(googleUser).then(
+      () => {
+        this.cd.detectChanges();
+      }
+    );
     this.authenticatorService.signInWithGoogle();
+    this.user2Subscription = this.googleAuthService.googleUserSubject.subscribe(
+      (user) => {
+        this.user2 = user;
+        if(this.user2) {
+          this.user = new SocialUser();
+          this.user.name = this.user2.getBasicProfile().getName();
+          this.authenticatorService.user = this.user;
+          console.log('OK');
+          this.cd.detectChanges();
+        }
+        this.authenticatorService.emitUserSubject();
+      }
+    );
+    this.googleAuthService.emitGoogleUser();
+    console.log(this.user2.getBasicProfile());
+    this.cd.detectChanges();
   }
 
   onSignOut() {

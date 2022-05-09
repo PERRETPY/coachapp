@@ -10,7 +10,6 @@ import {
   SocialLoginModule
 } from "angularx-social-login";
 import {AuthenticatorService} from "./service/authenticator.service";
-import { LoginComponent } from './component/login/login.component';
 import { HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { HomeComponent } from './component/home/home.component';
@@ -28,7 +27,6 @@ import { TrophyComponent } from './component/trophy/trophy.component';
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     HomeComponent,
     NavbarComponent,
     ContactComponent,
