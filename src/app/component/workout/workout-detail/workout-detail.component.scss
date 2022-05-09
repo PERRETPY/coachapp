@@ -6,14 +6,14 @@
   padding: 1em;
 }
 .column-content {
-
-
   display: flex;
+  flex-wrap: wrap;
 }
 
 
 .left-content {
   width: 75%;
+  min-width: 30em;
 }
 
 .right-content {
@@ -28,6 +28,16 @@
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 1em;
+}
+
+@media only screen and (max-width: 768px) {
+  .right-content {
+    width: 100%;
+  }
+  .right-header-content {
+    justify-content: flex-start;
+  }
 }
 
 textarea {
