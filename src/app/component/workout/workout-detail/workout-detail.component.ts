@@ -47,7 +47,7 @@ export class WorkoutDetailComponent implements OnInit {
       (workout) => {
         this.workout = workout;
         if(this.workout && this.workout.commentaire) {
-          console.log(workout);
+          this.youtubePlayer();
           this.commentaire = this.workout.commentaire.toString();
         }
         this.cd.detectChanges();
@@ -138,5 +138,51 @@ export class WorkoutDetailComponent implements OnInit {
       }).then(this.cd.detectChanges());
     }
     this.ngOnInit();
+  }
+
+  youtubePlayer() {
+    console.log('youtubePlayer');
+    let tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    let firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // 3. This function creates an <iframe> (and YouTube player)
+    //    after the API code downloads.
+    let player;
+    const workout = this.workout;
+    const videoId = workout.lienDocument.split('?')[1].split('=')[1];
+    console.log(videoId);
+    window['onYouTubeIframeAPIReady'] = function() {
+      console.log('onYouTubeIframeAPIReady');
+      player = new window['YT'].Player('player', {
+        height: '360',
+        width: '640',
+        videoId: videoId,
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    // 4. The API will call this function when the video player is ready.
+    function onPlayerReady(event) {
+      console.log('onPlayerReady');
+      event.target.playVideo();
+    }
+
+    // 5. The API calls this function when the player's state changes.
+    //    The function indicates that when playing a video (state=1),
+    //    the player should play for six seconds and then stop.
+    let done = false;
+    function onPlayerStateChange(event) {
+      console.log('onPlayerStateChange');
+    }
+    function stopVideo() {
+      console.log('stopVideo');
+      player.stopVideo();
+    }
   }
 }
