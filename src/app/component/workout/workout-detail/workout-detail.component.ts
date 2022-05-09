@@ -47,7 +47,9 @@ export class WorkoutDetailComponent implements OnInit {
       (workout) => {
         this.workout = workout;
         if(this.workout && this.workout.commentaire) {
-          this.youtubePlayer();
+          if(this.workout.lienDocument) {
+            this.youtubePlayer();
+          }
           this.commentaire = this.workout.commentaire.toString();
         }
         this.cd.detectChanges();
