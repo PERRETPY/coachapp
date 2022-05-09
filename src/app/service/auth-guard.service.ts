@@ -19,10 +19,8 @@ export class AuthGuardService {
   ): any {
 
     if (this.authenticatorService.user != null){
-      console.log('Auth OK !');
       return true;
     }else{
-      console.log('Auth KO !');
       this.router.navigate(['/']).then();
     }
 

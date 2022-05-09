@@ -84,6 +84,11 @@ export class NavigationBarComponent implements OnInit {
     this.infosMetaDonneesSubscription = this.programService.infosMetaDonneesSubject.subscribe(
       (infoMetaDonnees) => {
         this.infosMetaDonnees = infoMetaDonnees;
+        if(this.infosMetaDonnees) {
+          console.log('META DONNEES');
+          console.log(infoMetaDonnees);
+          this.cd.detectChanges();
+        }
       }
     );
     this.programService.emitMetaDonnees();

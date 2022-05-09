@@ -40,7 +40,6 @@ export class TrophyComponent implements OnInit {
   }
 
   private getListWorkouts() {
-    console.log('getWOrkouts');
     this.listWorkoutsSubscription = this.programService.listWorkoutSubject.subscribe(
       (workoutList) => {
         this.listWorkouts = workoutList;
@@ -55,7 +54,6 @@ export class TrophyComponent implements OnInit {
   }
 
   addWorkoutsToModules() {
-    console.log('add');
     this.listModules.forEach(
       (module) => {
         const workoutList = this.listWorkouts.filter(
@@ -66,7 +64,6 @@ export class TrophyComponent implements OnInit {
       }
     );
     this.cd.detectChanges();
-    console.log(this.listModules)
   }
 
   calculateAchivement(workoutList: Workout[]): number {

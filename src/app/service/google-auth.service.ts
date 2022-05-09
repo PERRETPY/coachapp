@@ -29,7 +29,6 @@ export class GoogleAuthService {
   public onSignIn(googleUser) {
     this.googleUser = googleUser;
     this.emitGoogleUser();
-    console.log("signed in");
     this.isSignedIn = true;
     this.googleDisplay = "none";
     this.signIn.emit();
@@ -44,10 +43,8 @@ export class GoogleAuthService {
   }
 
   public async signOut() {
-    console.log('Signing out.');
     let auth2 = gapi.auth2.getAuthInstance();
     await auth2.signOut().then(() => {
-      console.log("signed out");
       this.isSignedIn = false;
       this.googleDisplay = "block";
       localStorage.removeItem('sheetId');

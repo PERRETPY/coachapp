@@ -30,9 +30,7 @@ export class AppComponent implements OnInit {
   }
 
   public async signOut() {
-    console.log("calling gdata signout...");
     await this.gdata.signOut();
-    console.log("gdata signout finished");
     this.isSignedIn = this.gdata.isSignedIn;
     this.googleDisplay = this.gdata.googleDisplay;
     this.cd.detectChanges();

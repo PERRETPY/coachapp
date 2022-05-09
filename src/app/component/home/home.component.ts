@@ -55,7 +55,6 @@ export class HomeComponent implements OnInit {
     this.userSubscription = this.authenticatorService.userSubject.subscribe(
       (user: any) => {
         this.user = user;
-        console.log("detect changes");
         this.cd.detectChanges();
         if(this.user && this.spreadSheetIsSet()) {
           this.getTraductionMap();
@@ -70,13 +69,11 @@ export class HomeComponent implements OnInit {
   onSubmit() {
     const urlArray = this.sheetUrl.split('/');
     this.model.sheetId = urlArray[5]
-    console.log(this.model.sheetId);
     this.programService.loadSheetsAPI().then(
       () => {
         this.programService.setSpreadsheets(this.model.sheetId).then(
           () => {
             if(this.spreadSheetIsSet()) {
-              console.log('Lets go');
               this.getWorkoutList();
               this.cd.detectChanges();
               location.reload();
@@ -101,7 +98,6 @@ export class HomeComponent implements OnInit {
           this.filterWorkoutList = this.allWorkoutList;
           this.onSortWorkouts();
           this.loaded = true;
-          console.log("detect changes");
           this.cd.detectChanges();
         }
         this.cd.detectChanges();
@@ -122,8 +118,6 @@ export class HomeComponent implements OnInit {
   }
 
   onFilterWorkouts() {
-    console.log('Filter');
-    console.log(this.stateFilter);
     if(this.stateFilter !== 'tous') {
       this.filterWorkoutList = this.allWorkoutList.filter(
         workout => workout.etat === this.stateFilter);

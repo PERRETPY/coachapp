@@ -65,7 +65,6 @@ export class ProgramService {
               range: 'Traductions!A1:B'
             }).then((response) => {
               for (let i = 1; i < response.result.values.length; i++) {
-                console.log('here');
                 this.traductionMap.set(response.result.values[i][0], response.result.values[i][1])
               }
               this.emitTraduction();
@@ -99,7 +98,6 @@ export class ProgramService {
             }, (error) => {
               console.log('Erreur :' + error);
             });
-            console.log(this.listModules);
           });
       }
     );
@@ -127,8 +125,6 @@ export class ProgramService {
                   response.result.values[i][7], response.result.values[i][8], response.result.values[i][9],
                   response.result.values[i][10], response.result.values[i][11], response.result.values[i][12], i));
               }
-              console.log('From here');
-              console.log(this.listWorkouts);
               this.emitWorkouts();
             }, (error) => {
               console.log('Erreur :' + error);
@@ -168,7 +164,6 @@ export class ProgramService {
   getWorkoutById(codeModule: String, titre: String, dateDebutPrevue: String): void {
     this.workout = null;
     this.emitWorkout();
-    console.log('hello from here');
     this.loadClient().then(
       () => {
         this.loadSheetsAPI().then(
@@ -183,7 +178,6 @@ export class ProgramService {
                 if(codeModule === response.result.values[i][0]
                 && titre === response.result.values[i][1]
                 && dateDebutPrevue === response.result.values[i][7]) {
-                  console.log('workout find');
                   this.workout = new Workout(response.result.values[i][0], response.result.values[i][1], response.result.values[i][2],
                     response.result.values[i][3], response.result.values[i][4], response.result.values[i][5], response.result.values[i][6],
                     response.result.values[i][7], response.result.values[i][8], response.result.values[i][9],
@@ -214,7 +208,6 @@ export class ProgramService {
         spreadsheetId: sheetId,
       }).then(() => {
         localStorage.setItem("sheetId", sheetId);
-        console.log('SpreadSheet set');
         resolve();
       });
     });
@@ -238,7 +231,6 @@ export class ProgramService {
       gapi.client.load(
         'https://sheets.googleapis.com/$discovery/rest?version=v4')
         .then(() => {
-          console.log('Sheet API loaded');
             resolve();
           },
           (error) => {

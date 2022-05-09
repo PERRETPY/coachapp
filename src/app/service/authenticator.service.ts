@@ -36,7 +36,6 @@ export class AuthenticatorService {
   }
 
   signInWithGoogle(): void {
-    console.log('Sign In with Google !');
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
       response => {
         this.saveUser();
@@ -72,7 +71,6 @@ export class AuthenticatorService {
 
   saveUser(): void{
     this.user = this.socialUser;
-    console.log('saveUser, user : ' + this.user.email);
     localStorage.setItem('auth', JSON.stringify(this.user));
     this.emitUserSubject();
   }
@@ -88,7 +86,6 @@ export class AuthenticatorService {
 
 
   sendEmail(to: string, subject: string, corps: string) {
-    console.log(this.user.email);
 
     const scopes = [
       'https://www.googleapis.com/auth/gmail.send',
@@ -114,7 +111,7 @@ export class AuthenticatorService {
                 'raw': reallyEncodedMessage
               }
             }).then(res => {
-              console.log("done!", res)
+
             },
               (error) => {
               console.log(error);

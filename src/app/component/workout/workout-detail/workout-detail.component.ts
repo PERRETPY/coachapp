@@ -143,7 +143,6 @@ export class WorkoutDetailComponent implements OnInit {
   }
 
   youtubePlayer() {
-    console.log('youtubePlayer');
     let tag = document.createElement('script');
 
     tag.src = "https://www.youtube.com/iframe_api";
@@ -155,9 +154,7 @@ export class WorkoutDetailComponent implements OnInit {
     let player;
     const workout = this.workout;
     const videoId = workout.lienDocument.split('?')[1].split('=')[1];
-    console.log(videoId);
     window['onYouTubeIframeAPIReady'] = function() {
-      console.log('onYouTubeIframeAPIReady');
       player = new window['YT'].Player('player', {
         height: '360',
         width: '640',
@@ -171,7 +168,6 @@ export class WorkoutDetailComponent implements OnInit {
 
     // 4. The API will call this function when the video player is ready.
     function onPlayerReady(event) {
-      console.log('onPlayerReady');
       event.target.playVideo();
     }
 
@@ -180,10 +176,8 @@ export class WorkoutDetailComponent implements OnInit {
     //    the player should play for six seconds and then stop.
     let done = false;
     function onPlayerStateChange(event) {
-      console.log('onPlayerStateChange');
     }
     function stopVideo() {
-      console.log('stopVideo');
       player.stopVideo();
     }
   }
