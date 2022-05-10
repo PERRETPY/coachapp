@@ -1,4 +1,4 @@
-<div class="container" *ngIf="workout">
+<div class="container" *ngIf="workout && traductionMap">
   <div class="content">
     <div class="column-content">
       <div class="left-content">
@@ -7,8 +7,8 @@
       </div>
       <div class="right-content">
         <div class="right-header-content">
-          <button class="btn btn-success" *ngIf="workout.etat === 'non commencé' || workout.etat === 'terminé'" (click)="onChangeState('en cours')">Commencer</button>
-          <button class="btn btn-danger" *ngIf="workout.etat === 'en cours'" (click)="onChangeState('terminé')">Terminer</button>
+          <button class="btn btn-success" *ngIf="workout.etat === 'non commencé' || workout.etat === 'terminé'" (click)="onChangeState('en cours')">{{ traductionMap.get('begin_workout_button_label') }}</button>
+          <button class="btn btn-danger" *ngIf="workout.etat === 'en cours'" (click)="onChangeState('terminé')">{{ traductionMap.get('end_workout_button_label') }}</button>
         </div>
         <div class="right-content-values">
           <ul>
@@ -27,12 +27,12 @@
     </div>
     <div>
       <div class="textarea-group">
-        <label class="form-check-label" for="exampleCheck1">Commentaire</label>
+        <label class="form-check-label" for="exampleCheck1">{{ traductionMap.get('comment_title') }}</label>
         <textarea class="form-control" aria-label="With textarea" id="exampleCheck1" [(ngModel)]="commentaire"></textarea>
-        <button class="btn btn-primary" (click)="onSubmitCommentaire()">Envoyer</button>
+        <button class="btn btn-primary" (click)="onSubmitCommentaire()">{{ traductionMap.get('comment_send_button_label') }}</button>
       </div>
       <div class="textarea-group">
-        <label class="form-check-label" for="exampleCheck2">Feedback</label>
+        <label class="form-check-label" for="exampleCheck2">{{ traductionMap.get('feedback_title') }}</label>
         <textarea class="form-control" aria-label="With textarea" id="exampleCheck2" disabled>{{ workout.feedback }}</textarea>
       </div>
     </div>
@@ -42,7 +42,7 @@
       <div id="player"></div>
     </div>
     <div *ngIf="!isYoutubeLink(workout.lienDocument.toString())">
-      <h3>Lien vers un document externe :</h3>
+      <h3>{{ traductionMap.get('document_link_title') }}</h3>
       <a target="_blank" rel="noopener noreferrer" [href]="workout.lienDocument" class="link-info">{{ workout.lienDocument }}</a>
     </div>
   </div>

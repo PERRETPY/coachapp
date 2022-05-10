@@ -27,6 +27,12 @@ export class NavigationBarComponent implements OnInit {
   infosMetaDonnees: MetaDonnees;
   infosMetaDonneesSubscription: Subscription = new Subscription();
 
+  traductionMap: Map<string, string> = new Map<string, string>();
+  traductionMapSubscription: Subscription;
+
+  nbCallTrad: number = 0;
+  nbCallMeta: number = 0;
+
 
   constructor(private cd: ChangeDetectorRef,
               private authenticatorService: AuthenticatorService,
@@ -37,11 +43,15 @@ export class NavigationBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.nbCallTrad = 0;
+    this.nbCallMeta = 0;
     this.userSubscription = this.authenticatorService.userSubject.subscribe(
       (user: any) => {
         this.user = user;
         if(this.user && this.spreadSheetIsSet()) {
           this.getInfosMetaDonnees();
+          this.getTraductionMap();
+          this.cd.detectChanges();
         }
       }
     );
@@ -81,22 +91,42 @@ export class NavigationBarComponent implements OnInit {
   }
 
   private getInfosMetaDonnees() {
-    this.infosMetaDonneesSubscription = this.programService.infosMetaDonneesSubject.subscribe(
-      (infoMetaDonnees) => {
-        this.infosMetaDonnees = infoMetaDonnees;
-        if(this.infosMetaDonnees) {
-          console.log('META DONNEES');
-          console.log(infoMetaDonnees);
-          this.cd.detectChanges();
+    this.nbCallMeta++;
+    if(this.nbCallMeta < 2) {
+      this.infosMetaDonneesSubscription = this.programService.infosMetaDonneesSubject.subscribe(
+        (infoMetaDonnees) => {
+          this.infosMetaDonnees = infoMetaDonnees;
+          if(this.infosMetaDonnees) {
+            console.log('META DONNEES');
+            console.log(infoMetaDonnees);
+            this.cd.detectChanges();
+          }
         }
-      }
-    );
-    this.programService.emitMetaDonnees();
-    this.programService.getMetaDonnees();
-    this.cd.detectChanges();
+      );
+      this.programService.emitMetaDonnees();
+      this.programService.getMetaDonnees();
+      this.cd.detectChanges();
+    }
   }
 
   spreadSheetIsSet(): boolean {
+    this.cd.detectChanges();
     return localStorage.getItem('sheetId') && true;
+  }
+
+  getTraductionMap() {
+    this.nbCallTrad++;
+    if(this.nbCallTrad < 2) {
+      console.log('get traduction map');
+      this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
+        (traductionMap) => {
+          this.traductionMap = traductionMap;
+          this.cd.detectChanges();
+        }
+      );
+      this.programService.emitTraduction();
+      this.programService.getTraduction();
+      this.cd.detectChanges();
+    }
   }
 }

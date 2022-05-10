@@ -13,6 +13,9 @@ export class ContactComponent implements OnInit {
   infosCoach: Coach;
   infosCoachSubscription: Subscription = new Subscription();
 
+  traductionMap: Map<string, string> = new Map<string, string>();
+  traductionMapSubscription: Subscription;
+
   metadonnees: MetaDonnees
   programService: ProgramService;
   private loaded: boolean = false;
@@ -22,6 +25,7 @@ export class ContactComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.getTraductionMap();
     this.infosCoachSubscription = this.programService.infoCoachSubject.subscribe(
       (infosCoach) => {
         this.infosCoach = infosCoach;
@@ -35,6 +39,16 @@ export class ContactComponent implements OnInit {
     );
     this.programService.emitWorkouts();
     this.programService.getInfosCoach().then();
+  }
+
+  getTraductionMap() {
+    this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
+      (traductionMap) => {
+        this.traductionMap = traductionMap;
+      }
+    );
+    this.programService.emitTraduction();
+    this.programService.getTraduction();
   }
 
 }

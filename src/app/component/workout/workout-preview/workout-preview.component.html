@@ -1,6 +1,6 @@
-<div class="card" style="width: 18rem; cursor: pointer" (click)="onWorkoutClick()">
+<div class="card" style="width: 18rem; cursor: pointer" *ngIf="traductionMap">
   <div class="card-body">
-    <h5 class="card-title" [ngStyle]="{'color': workout.etat == 'terminé' ? 'green' : workout.etat == 'en cours' ? 'orange' : 'red'}">{{ workout.titre }}</h5>
+    <h5 class="card-title" [ngStyle]="{'color': workout.etat == 'terminé' ? traductionMap.get('done_workout_color') : workout.etat == 'en cours' ? traductionMap.get('wip_workout_color') : traductionMap.get('todo_workout_color')}">{{ workout.titre }}</h5>
     <p class="card-text">{{ workout.description }}</p>
     <p class="card-text"><small class="text-muted">{{ workout.dateDebutPrevue }}</small></p>
   </div>

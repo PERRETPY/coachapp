@@ -25,6 +25,9 @@ export class WorkoutDetailComponent implements OnInit {
   coachInfo: Coach;
   coachInfoSubscription: Subscription = new Subscription();
 
+  traductionMap: Map<string, string> = new Map<string, string>();
+  traductionMapSubscription: Subscription;
+
   constructor(private route: ActivatedRoute,
               private programService: ProgramService,
               private cd: ChangeDetectorRef,
@@ -32,6 +35,7 @@ export class WorkoutDetailComponent implements OnInit {
               private datePipe: DatePipe) { }
 
   ngOnInit(): void {
+    this.getTraductionMap();
     this.workout = null;
     this.commentaire = '';
     const workoutIdEncode = this.route.snapshot.params['id'];
@@ -143,7 +147,6 @@ export class WorkoutDetailComponent implements OnInit {
   }
 
   isYoutubeLink(urlLink: string): boolean {
-    // https://www.youtube.com/watch?v=SngodvMU0JA
     const regex = new RegExp('https:\/\/www\.youtube\.com\/watch\\?v=*');
     const res = regex.test(urlLink);
     console.log(urlLink);
@@ -190,5 +193,17 @@ export class WorkoutDetailComponent implements OnInit {
     function stopVideo() {
       player.stopVideo();
     }
+  }
+
+  getTraductionMap() {
+    this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
+      (traductionMap) => {
+        this.traductionMap = traductionMap;
+        this.cd.detectChanges();
+      }
+    );
+    this.programService.emitTraduction();
+    this.programService.getTraduction();
+    this.cd.detectChanges();
   }
 }

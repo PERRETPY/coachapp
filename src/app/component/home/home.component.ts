@@ -42,6 +42,8 @@ export class HomeComponent implements OnInit {
 
   loaded: boolean = false;
 
+  nbCall: number = 0;
+
   constructor(public cd: ChangeDetectorRef,
               public gauth: GoogleAuthService,
               public programService: ProgramService,
@@ -50,6 +52,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.nbCall = 0;
     this.allWorkoutList = [];
     this.filterWorkoutList = [];
     this.userSubscription = this.authenticatorService.userSubject.subscribe(
@@ -59,7 +62,6 @@ export class HomeComponent implements OnInit {
         if(this.user && this.spreadSheetIsSet()) {
           this.getTraductionMap();
           this.getWorkoutList();
-          this.cd.detectChanges();
         }
       }
     );
@@ -74,6 +76,7 @@ export class HomeComponent implements OnInit {
         this.programService.setSpreadsheets(this.model.sheetId).then(
           () => {
             if(this.spreadSheetIsSet()) {
+              this.getTraductionMap();
               this.getWorkoutList();
               this.cd.detectChanges();
               location.reload();
@@ -100,7 +103,6 @@ export class HomeComponent implements OnInit {
           this.loaded = true;
           this.cd.detectChanges();
         }
-        this.cd.detectChanges();
       }
     );
     this.programService.emitWorkouts();
@@ -108,13 +110,18 @@ export class HomeComponent implements OnInit {
   }
 
   getTraductionMap() {
-    this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
-      (traductionMap) => {
-        this.traductionMap = traductionMap;
-      }
-    );
-    this.programService.emitTraduction();
-    this.programService.getTraduction();
+    this.nbCall++;
+    if(this.nbCall < 2) {
+      console.log('getTraductionMap');
+      this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
+        (traductionMap) => {
+          this.traductionMap = traductionMap;
+          this.cd.detectChanges();
+        }
+      );
+      this.programService.emitTraduction();
+      this.programService.getTraduction();
+    }
   }
 
   onFilterWorkouts() {

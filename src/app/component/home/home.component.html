@@ -1,11 +1,11 @@
-<div class="container" *ngIf="traductionMap">
+<div class="container">
   <div *ngIf="user">
 
     <form (ngSubmit)="onSubmit()">
-      <label>{{ spreadSheetIsSet() ? traductionMap.get('spreadsheet_input_label') : 'Lien du document Google sheet'}}</label>
+      <label>{{ traductionMap.size > 0 ? traductionMap.get('spreadsheet_input_label') : 'Lien du document Google sheet'}}</label>
       <div class="input-group mb-3">
         <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2" required [(ngModel)]="sheetUrl" name="sheetId" [placeholder]="this.spreadSheetIsSet() ? traductionMap.get('spreadsheet_input_placeholder') : ''">
-        <button class="btn btn-success" type="submit" id="button-addon2">{{ spreadSheetIsSet() ? traductionMap.get('spreadsheet_input_button_label') : 'Valider' }}</button>
+        <button class="btn btn-success" type="submit" [ngStyle]="{'background-color': traductionMap.get('spreadsheet_input_button_color'), 'border-color': traductionMap.get('spreadsheet_input_button_color')}" id="button-addon2">{{ traductionMap.size > 0 ? traductionMap.get('spreadsheet_input_button_label') : 'Valider' }}</button>
       </div>
     </form>
 
@@ -33,7 +33,7 @@
           <form (ngSubmit)="onSearchWorkouts()">
             <div class="input-group search-input">
               <input type="text" class="form-control" required [(ngModel)]="search" name="sheetId" [placeholder]="traductionMap.get('workout_search_placeholder')">
-              <button class="btn btn-primary" type="submit" id="search">{{ traductionMap.get('workout_search_button_label') }}</button>
+              <button class="btn btn-primary" type="submit" [ngStyle]="{'background-color': traductionMap.get('workout_search_button_color'), 'border-color': traductionMap.get('workout_search_button_color')}" id="search">{{ traductionMap.get('workout_search_button_label') }}</button>
             </div>
           </form>
         </div>
