@@ -47,7 +47,7 @@ export class WorkoutDetailComponent implements OnInit {
       (workout) => {
         this.workout = workout;
         if(this.workout && this.workout.commentaire) {
-          if(this.workout.lienDocument) {
+          if(this.workout.lienDocument && this.isYoutubeLink(this.workout.lienDocument.toString())) {
             this.youtubePlayer();
           }
           this.commentaire = this.workout.commentaire.toString();
@@ -140,6 +140,16 @@ export class WorkoutDetailComponent implements OnInit {
       }).then(this.cd.detectChanges());
     }
     this.ngOnInit();
+  }
+
+  isYoutubeLink(urlLink: string): boolean {
+    // https://www.youtube.com/watch?v=SngodvMU0JA
+    const regex = new RegExp('https:\/\/www\.youtube\.com\/watch\\?v=*');
+    const res = regex.test(urlLink);
+    console.log(urlLink);
+    console.log(regex);
+    console.log(res);
+    return res;
   }
 
   youtubePlayer() {

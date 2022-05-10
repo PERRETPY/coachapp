@@ -19,6 +19,7 @@
             <li>Fin prévu : {{ workout.dateFinPrevue }}</li>
             <li *ngIf="workout.dateDebutReelle">Début réel : {{ workout.dateDebutReelle }}</li>
             <li *ngIf="workout.dateFinReelle">Fin réel : {{ workout.dateFinReelle }}</li>
+            <li>Type d'exercice : {{ workout.type }}</li>
           </ul>
         </div>
 
@@ -36,7 +37,13 @@
       </div>
     </div>
   </div>
-  <div class="content content-video" *ngIf="workout.lienDocument">
-    <div id="player"></div>
+  <div class="content content-doc" *ngIf="workout.lienDocument">
+    <div class="content-video">
+      <div id="player"></div>
+    </div>
+    <div *ngIf="!isYoutubeLink(workout.lienDocument.toString())">
+      <h3>Lien vers un document externe :</h3>
+      <a target="_blank" rel="noopener noreferrer" [href]="workout.lienDocument" class="link-info">{{ workout.lienDocument }}</a>
+    </div>
   </div>
 </div>
