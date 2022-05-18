@@ -1,25 +1,22 @@
 import { Injectable } from '@angular/core';
-import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from "@angular/router";
+import { Router } from "@angular/router";
+import {ProgramService} from "../program/program.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SheetidGuardService {
 
-  constructor(private router: Router) {
+  constructor(private router: Router,
+              private programService: ProgramService) {
   }
 
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): any {
-
-    if (localStorage.getItem('sheetId') != null){
+  canActivate(): any {
+    if (this.programService.isSpreadSheetSet()){
       return true;
     }else{
       this.router.navigate(['/']).then();
     }
-
   }
 }

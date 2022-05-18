@@ -1,7 +1,6 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SocialUser} from "angularx-social-login";
 import {Subscription} from "rxjs";
-import {Router} from "@angular/router";
 import {ProgramService} from "../../service/program/program.service";
 import {MetaDonnees} from "../../model/metadonnees.model";
 import {GoogleAuthService} from "../../service/google-auth/google-auth.service";
@@ -30,7 +29,6 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
 
   constructor(private cd: ChangeDetectorRef,
               private googleAuthService: GoogleAuthService,
-              private router: Router,
               private programService: ProgramService) {
     window.onSignIn = (googleUser) => this.onSignIn(googleUser);
   }
@@ -55,7 +53,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSignIn(googleUser) {
+  private onSignIn(googleUser): void {
     this.googleAuthService.onSignIn(googleUser).then(
       () => {
         this.cd.detectChanges();
@@ -63,9 +61,13 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSignOut() {
-    this.googleAuthService.signOut();
-    this.user = null;
+  private onSignOut(): void {
+    this.googleAuthService.signOut().then(
+      () => {
+        this.user = null;
+        window.location.reload();
+      }
+    );
   }
 
   private getInfosMetaDonnees() {
@@ -82,7 +84,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
     );
   }
 
-  getTraductionMap() {
+  private getTraductionMap(): void {
     this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
       (traductionMap) => {
         this.traductionMap = traductionMap;
@@ -97,7 +99,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
       }).catch();
   }
 
-  private loadData() {
+  private loadData(): void {
     console.log('loadData()');
     if(!this.traductionMap || this.traductionMap.size < 1) {
       console.log('getTraduction from navigation-bar into loadData()');
