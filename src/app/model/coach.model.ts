@@ -1,9 +1,9 @@
 export class Coach {
-    public name: String;
-    public description: String;
-    public image: String;
-    public site: String;
-    public mail: String;
+    public name: string;
+    public description: string;
+    public image: string;
+    public site: string;
+    public mail: string;
     constructor(name, description, image, site, mail){
         this.name = name;
         this.description = description;

@@ -1,21 +1,22 @@
 export class Workout {
-  public codeModule: String;
-  public titre: String;
-  public description: String;
-  public dureeEstimee: String;
-  public type: String;
-  public lienDocument: String;
-  public etat: String;
-  public dateDebutPrevue: String;
-  public dateDebutReelle: String;
-  public dateFinPrevue: String;
-  public dateFinReelle: String;
-  public commentaire: String;
-  public feedback: String;
-  public range: Number;
-  
-  constructor(codeModule, titre, description, dureeEstime, type, lienDocument, etat, 
-      dateDebutPrevue, dateDebutReelle, dateFinPrevue, dateFinReelle, commentaire, feedback, range) {
+  public codeModule: string;
+  public titre: string;
+  public description: string;
+  public dureeEstimee: string;
+  public type: string;
+  public lienDocument: string;
+  public etat: string;
+  public dateDebutPrevue: string;
+  public dateDebutReelle: string;
+  public dateFinPrevue: string;
+  public dateFinReelle: string;
+  public commentaire: string;
+  public feedback: string;
+  public range: number;
+  public daysLate: number;
+
+  constructor(codeModule, titre, description, dureeEstime, type, lienDocument, etat,
+      dateDebutPrevue, dateDebutReelle, dateFinPrevue, dateFinReelle, commentaire, feedback, range, daysLate) {
         this.codeModule = codeModule;
         this.titre = titre;
         this.description = description;
@@ -30,5 +31,6 @@ export class Workout {
         this.commentaire = commentaire;
         this.feedback = feedback;
         this.range = range;
+        this.daysLate = daysLate;
   }
 }

@@ -1,10 +1,10 @@
-import {Component, OnInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { GoogleAuthService } from 'src/app/service/google-auth.service';
 import { ProgramService } from 'src/app/service/program.service';
 import { SheetModel } from '../../model/sheet-model';
-import {Workout} from "../../model/workout.model";
-import {Observer, Subscription} from "rxjs";
-import {SocialUser} from "angularx-social-login";
+import { Workout } from "../../model/workout.model";
+import { Subscription} from "rxjs";
+import { SocialUser } from "angularx-social-login";
 
 declare global {
   interface Window { onSignIn: (googleuser: any) => void; }
@@ -18,7 +18,6 @@ declare global {
 export class HomeComponent implements OnInit, OnDestroy {
   allWorkoutList: Workout[] = [];
   workoutSubscription: Subscription;
-  workoutObserver: Observer<Workout[]>;
 
   isSpreadSheetSetSubscription: Subscription;
   isSpreadSheetSet: boolean;
@@ -32,7 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   traductionMapSubscription: Subscription;
 
   filterProperties: string[] = ["tous", "non commencé", "en cours", "terminé"];
-  sortProperties: string[] = ["État ascendant", "État descendant", "Date ascendant", 'Date descendant'];
+  sortProperties: string[] = ["État ascendant", "État descendant", "Date ascendant", 'Date descendant', 'Retard descendant', "Retard ascendant"];
   stateFilter: string = 'tous';
   sortProperty: string = 'Date ascendant';
   search: string = '';
@@ -178,7 +177,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.filterWorkoutList.sort(
         (a, b) => a.dateDebutPrevue < b.dateDebutPrevue ? 1 : a.dateDebutPrevue === b.dateDebutPrevue ? 0 : -1
       );
+    }else if(this.sortProperty === 'Retard descendant') {
+      this.filterWorkoutList.sort(
+        (a, b) => a.daysLate < b.daysLate ? 1 : a.daysLate === b.daysLate ? 0 : -1
+      );
+    }else if(this.sortProperty === 'Retard ascendant') {
+      this.filterWorkoutList.sort(
+        (a, b) => a.daysLate > b.daysLate ? 1 : a.daysLate === b.daysLate ? 0 : -1
+      );
     }
+
     this.cd.detectChanges();
   }
 

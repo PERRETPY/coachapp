@@ -39,6 +39,8 @@ export class ProgramService {
 
   }
 
+
+
   private async loadMetaDonnees(): Promise<MetaDonnees> {
     console.log('loadMetaDonnees');
     await this.loadClient();
@@ -159,6 +161,7 @@ export class ProgramService {
   }
 
 
+
   private async loadWorkouts(): Promise<Workout[]> {
     console.log('loadWorkouts');
     await this.loadClient();
@@ -172,10 +175,12 @@ export class ProgramService {
         });
         this.listWorkouts = [];
         for (let i = 1; i < response.result.values.length; i++) {
-          this.listWorkouts.push(new Workout(response.result.values[i][0], response.result.values[i][1], response.result.values[i][2],
-            response.result.values[i][3], response.result.values[i][4], response.result.values[i][5], response.result.values[i][6],
-            response.result.values[i][7], response.result.values[i][8], response.result.values[i][9],
-            response.result.values[i][10], response.result.values[i][11], response.result.values[i][12], i+1));
+          const values = response.result.values[i];
+          this.listWorkouts.push(new Workout(values[0], values[1], values[2],
+            values[3], values[4], values[5], values[6],
+            values[7], values[8], values[9],
+            values[10], values[11], values[12],
+            i+1, values[6] === 'non commencé' ? ProgramService.calculateLate(values[7]) : ProgramService.calculateLate(values[9])));
         }
         this.emitWorkouts();
         resolve(this.listWorkouts);
@@ -198,35 +203,6 @@ export class ProgramService {
     const workoutList = this.listWorkouts;
     this.listWorkoutSubject.next(workoutList);
   }
-
-
-
-  /*public async getWorkouts(): Promise<Observable<Workout[]>> {
-    console.log('loading Workouts');
-    await this.loadClient();
-    await this.loadSheetsAPI();
-
-    return new Observable(
-      (observer) => {
-        gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: localStorage.getItem('sheetId'),
-          range: 'Exercices!A1:N'
-        }).then(
-          (response) => {
-            this.listWorkouts = [];
-            for (let i = 1; i < response.result.values.length; i++) {
-              this.listWorkouts.push(new Workout(response.result.values[i][0], response.result.values[i][1], response.result.values[i][2],
-                response.result.values[i][3], response.result.values[i][4], response.result.values[i][5], response.result.values[i][6],
-                response.result.values[i][7], response.result.values[i][8], response.result.values[i][9],
-                response.result.values[i][10], response.result.values[i][11], response.result.values[i][12], i));
-            }
-            observer.next(this.listWorkouts);
-            observer.complete();
-          }
-        );
-      }
-    );
-  }*/
 
 
 
@@ -264,6 +240,7 @@ export class ProgramService {
     const infosCoach = this.infosCoach;
     this.infoCoachSubject.next(infosCoach);
   }
+
 
 
   private async loadWorkout(codeModule: String, titre: String, dateDebutPrevue: String) {
@@ -368,6 +345,29 @@ export class ProgramService {
     });
   }
 
+  private static calculateLate(dateCible: string): number {
+    const today = new Date();
+    let tabDate;
+    let daysGap;
+
+    tabDate = dateCible.split('/');
+
+    if(tabDate.length === 3) {
+      const englishDate = tabDate[1] + '/' + tabDate[0] + '/' + tabDate[2];
+      const dateCible = new Date(englishDate);
+
+      daysGap = Math.floor((today.getTime() - dateCible.getTime()) / 1000 / 60 / 60 / 24);
+
+      if(daysGap < 0) {
+        daysGap = 0;
+      }
+
+      return daysGap;
+    }else {
+      return 0;
+    }
+  }
+
   //--
 
   public getModule(code: String): Module {
@@ -402,7 +402,7 @@ export class ProgramService {
 
     return new Promise((resolve, reject) => {
       if(response.status === 200) {
-        this.googleAuthService.sendEmail(this.infosCoach.mail.toString(), 'Nouveau commentaire sur l\'exercice ' + workout.titre, commentaire)
+        this.googleAuthService.sendEmail(this.infosCoach.mail, 'Nouveau commentaire sur l\'exercice ' + workout.titre, commentaire)
         resolve();
       } else {
         reject();

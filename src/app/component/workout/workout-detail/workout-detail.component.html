@@ -41,7 +41,7 @@
     <div class="content-video">
       <div id="player"></div>
     </div>
-    <div *ngIf="!isYoutubeLink(workout.lienDocument.toString())">
+    <div *ngIf="!isYoutubeLink(workout.lienDocument)">
       <h3>{{ traductionMap.get('document_link_title') }}</h3>
       <a target="_blank" rel="noopener noreferrer" [href]="workout.lienDocument" class="link-info">{{ workout.lienDocument }}</a>
     </div>

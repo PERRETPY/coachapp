@@ -52,9 +52,9 @@ export class WorkoutDetailComponent implements OnInit {
     this.workoutSubscription = this.programService.workoutSubject.subscribe(
       (workout) => {
         this.workout = workout;
-        this.commentaire = this.workout.commentaire.toString();
+        this.commentaire = this.workout.commentaire;
         if(this.workout.lienDocument !== lienDocument) {
-          if(this.workout.lienDocument && this.isYoutubeLink(this.workout.lienDocument.toString())) {
+          if(this.workout.lienDocument && this.isYoutubeLink(this.workout.lienDocument)) {
             this.youtubePlayer();
           }
         }
@@ -66,10 +66,10 @@ export class WorkoutDetailComponent implements OnInit {
       (workout) => {
         this.workout = workout;
         lienDocument = workout.lienDocument;
-        if(this.workout.lienDocument && this.isYoutubeLink(this.workout.lienDocument.toString())) {
+        if(this.workout.lienDocument && this.isYoutubeLink(this.workout.lienDocument)) {
           this.youtubePlayer();
         }
-        this.commentaire = this.workout.commentaire.toString();
+        this.commentaire = this.workout.commentaire;
         this.cd.detectChanges();
       }
     ).catch();

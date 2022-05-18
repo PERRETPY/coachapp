@@ -4,7 +4,7 @@
     <p class="card-text description">{{ workout.description }}</p>
     <div class="card-footer">
       <span class="card-text"><small class="text-muted">{{ workout.dateDebutPrevue }}</small></span>
-      <span class="badge text-bg-danger bg-danger" *ngIf="daysLate && daysLate > 0">{{ daysLate }} j</span>
+      <span class="badge text-bg-danger bg-danger" *ngIf="workout.daysLate > 0">{{ workout.daysLate }} j</span>
     </div>
   </div>
 </div>
