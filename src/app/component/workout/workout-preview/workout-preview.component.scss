@@ -9,3 +9,18 @@
 .card-title .done {
   color: green;
 }
+
+.card-footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.card {
+  height: 15em;
+}
+
+.description {
+  height: 50%;
+  overflow: scroll;
+}
