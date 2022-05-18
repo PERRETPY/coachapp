@@ -9,7 +9,6 @@ import {
   SocialAuthServiceConfig,
   SocialLoginModule
 } from "angularx-social-login";
-import {AuthenticatorService} from "./service/authenticator.service";
 import { HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { HomeComponent } from './component/home/home.component';
@@ -64,7 +63,6 @@ import {GoogleAuthService} from "./service/google-auth/google-auth.service";
         ]
       } as SocialAuthServiceConfig,
     },
-    AuthenticatorService,
     ProgramService,
     JsLoaderService,
     GoogleAuthService,

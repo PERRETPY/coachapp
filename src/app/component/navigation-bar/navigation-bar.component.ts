@@ -1,5 +1,4 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {AuthenticatorService} from "../../service/authenticator.service";
 import {SocialUser} from "angularx-social-login";
 import {Subscription} from "rxjs";
 import {Router} from "@angular/router";
@@ -30,7 +29,6 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
 
 
   constructor(private cd: ChangeDetectorRef,
-              private authenticatorService: AuthenticatorService,
               private googleAuthService: GoogleAuthService,
               private router: Router,
               private programService: ProgramService) {
@@ -46,7 +44,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.authenticatorService.emitUserSubject();
+    this.googleAuthService.emitGoogleUser();
 
     this.isSpreadSheetSetSubscription = this.programService.isSpreadSheetSetSubject.subscribe(
       (isSpreadSheetSet) => {
@@ -66,7 +64,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
   }
 
   onSignOut() {
-    this.authenticatorService.signOut();
+    this.googleAuthService.signOut();
     this.user = null;
   }
 
