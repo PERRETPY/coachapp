@@ -16,7 +16,7 @@
         {{ user.name }}
        </li>
       <li class="nav-item">
-        <div class="g-signin2" data-onsuccess="onSignIn" *ngIf="!user && !user2"></div>
+        <div class="g-signin2" data-onsuccess="onSignIn" *ngIf="!user"></div>
         <button class="btn btn-danger" [ngStyle]="{'background-color': traductionMap.get('logout_button_color'), 'border-color': traductionMap.get('logout_button_color')}" (click)="onSignOut()" *ngIf="user">{{ traductionMap.size > 0 ? traductionMap.get('logout_button_label') : 'Se déconnecter' }}</button>
       </li>
     </ul>

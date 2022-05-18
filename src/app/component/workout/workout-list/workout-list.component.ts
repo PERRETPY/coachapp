@@ -11,6 +11,9 @@ import Util from "../../../util/util";
 export class WorkoutListComponent implements OnInit {
   @Input()
   workoutList: Workout[];
+  
+  @Input()
+  traductionMap: Map<string, string>;
 
   constructor(private router: Router,
               private zone: NgZone) { }

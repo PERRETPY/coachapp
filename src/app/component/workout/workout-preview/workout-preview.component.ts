@@ -1,7 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Workout} from "../../../model/workout.model";
-import {Subscription} from "rxjs";
-import {ProgramService} from "../../../service/program.service";
 
 @Component({
   selector: 'app-workout-preview',
@@ -12,24 +10,11 @@ export class WorkoutPreviewComponent implements OnInit {
   @Input()
   workout: Workout;
 
-  traductionMap: Map<string, string> = new Map<string, string>();
-  traductionMapSubscription: Subscription;
+  @Input()
+  traductionMap: Map<string, string>;
 
-  constructor(private programService: ProgramService) { }
+  constructor() { }
 
-  ngOnInit(): void {
-    this.getTraductionMap();
-  }
-
-  getTraductionMap() {
-    this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
-      (traductionMap) => {
-        this.traductionMap = traductionMap;
-      }
-    );
-    this.programService.emitTraduction();
-    this.programService.getTraduction();
-    //
-  }
+  ngOnInit(): void { }
 
 }

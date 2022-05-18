@@ -1,12 +1,11 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Workout} from "../../../model/workout.model";
 import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs";
 import {ProgramService} from "../../../service/program.service";
 import Util from "../../../util/util";
 import {AuthenticatorService} from "../../../service/authenticator.service";
-import {Coach} from "../../../model/coach.model";
-import { DatePipe } from '@angular/common';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-workout-detail',
@@ -22,9 +21,6 @@ export class WorkoutDetailComponent implements OnInit {
   workout: Workout;
   workoutSubscription: Subscription = new Subscription();
 
-  coachInfo: Coach;
-  coachInfoSubscription: Subscription = new Subscription();
-
   traductionMap: Map<string, string> = new Map<string, string>();
   traductionMapSubscription: Subscription;
 
@@ -36,64 +32,60 @@ export class WorkoutDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTraductionMap();
-    this.workout = null;
-    this.commentaire = '';
+    //this.workout = null;
+    //this.commentaire = '';
+
+    //Get workout id
     const workoutIdEncode = this.route.snapshot.params['id'];
     this.workoutId = Util.hexDecode(workoutIdEncode);
-
     const workoutInfo = this.workoutId.split(';');
-
     const codeModule = workoutInfo[0];
     const titre = workoutInfo[1];
     const dateDebutPrevue = workoutInfo[2];
 
+    this.getWorkout(codeModule, titre, dateDebutPrevue);
+
+  }
+
+  getWorkout(codeModule: string, titre: string, dateDebutPrevue: string): void {
+    let lienDocument;
     this.workoutSubscription = this.programService.workoutSubject.subscribe(
       (workout) => {
         this.workout = workout;
-        if(this.workout && this.workout.commentaire) {
+        this.commentaire = this.workout.commentaire.toString();
+        if(this.workout.lienDocument !== lienDocument) {
           if(this.workout.lienDocument && this.isYoutubeLink(this.workout.lienDocument.toString())) {
             this.youtubePlayer();
           }
-          this.commentaire = this.workout.commentaire.toString();
         }
         this.cd.detectChanges();
       }
     );
-    this.programService.getWorkoutById(codeModule, titre, dateDebutPrevue);
 
-    this.coachInfoSubscription = this.programService.infoCoachSubject.subscribe(
-      (coachInfo) => {
-        this.coachInfo = coachInfo;
+    this.programService.getWorkoutById(codeModule, titre, dateDebutPrevue).then(
+      (workout) => {
+        this.workout = workout;
+        lienDocument = workout.lienDocument;
+        if(this.workout.lienDocument && this.isYoutubeLink(this.workout.lienDocument.toString())) {
+          this.youtubePlayer();
+        }
+        this.commentaire = this.workout.commentaire.toString();
+        this.cd.detectChanges();
       }
-    );
-    this.programService.emitInfosCoach();
-    this.programService.getInfosCoach().then();
+    ).catch();
   }
 
 
   onSubmitCommentaire() {
     //Vérification que le commentaire a changé
     if(this.commentaire !== this.workout.commentaire) {
-      gapi.client.sheets.spreadsheets.values.update({
-        spreadsheetId: localStorage.getItem('sheetId'),
-        range:'Exercices!L' + this.workout.range,
-        valueInputOption: 'RAW',
-        resource: {
-          values: [
-            [this.commentaire]
-          ]
-        }
-      }).then(
+      this.programService.putCommentOnWorkout(this.workout, this.commentaire).then(
         () => {
+          this.workout.commentaire = this.commentaire
           this.cd.detectChanges();
-          this.workout.commentaire = this.commentaire;
-        });
-
-      //Send notification to the coach
-      this.authenticatorService.sendEmail(this.coachInfo.mail.toString(), 'Nouveau commentaire sur l\'exercice '+this.workout.titre, this.workout.commentaire.toString());
+        }
+      );
     }
-
-    //this.authenticatorService.sendEmail();
   }
 
   onChangeState(newState: string) {
@@ -108,7 +100,7 @@ export class WorkoutDetailComponent implements OnInit {
           [newState]
         ]
       }
-    }).then(this.cd.detectChanges());
+    }).then(() => this.cd.detectChanges());
     if(newState == "en cours") {
       gapi.client.sheets.spreadsheets.values.update({
         spreadsheetId: localStorage.getItem('sheetId'),
@@ -119,7 +111,7 @@ export class WorkoutDetailComponent implements OnInit {
             [dateToString]
           ]
         }
-      }).then(this.cd.detectChanges());
+      }).then(() => this.cd.detectChanges());
       gapi.client.sheets.spreadsheets.values.update({
         spreadsheetId: localStorage.getItem('sheetId'),
         range:'Exercices!K' + this.workout.range,
@@ -129,7 +121,7 @@ export class WorkoutDetailComponent implements OnInit {
             [""]
           ]
         }
-      }).then(this.cd.detectChanges());
+      }).then(() =>this.cd.detectChanges());
     }
     if(newState == "terminé") {
       gapi.client.sheets.spreadsheets.values.update({
@@ -141,18 +133,14 @@ export class WorkoutDetailComponent implements OnInit {
             [dateToString]
           ]
         }
-      }).then(this.cd.detectChanges());
+      }).then(() => this.cd.detectChanges());
     }
     this.ngOnInit();
   }
 
   isYoutubeLink(urlLink: string): boolean {
     const regex = new RegExp('https:\/\/www\.youtube\.com\/watch\\?v=*');
-    const res = regex.test(urlLink);
-    console.log(urlLink);
-    console.log(regex);
-    console.log(res);
-    return res;
+    return regex.test(urlLink);
   }
 
   youtubePlayer() {
@@ -187,12 +175,11 @@ export class WorkoutDetailComponent implements OnInit {
     // 5. The API calls this function when the player's state changes.
     //    The function indicates that when playing a video (state=1),
     //    the player should play for six seconds and then stop.
-    let done = false;
-    function onPlayerStateChange(event) {
+    function onPlayerStateChange() {
     }
-    function stopVideo() {
+    /*function stopVideo() {
       player.stopVideo();
-    }
+    }*/
   }
 
   getTraductionMap() {
@@ -202,8 +189,12 @@ export class WorkoutDetailComponent implements OnInit {
         this.cd.detectChanges();
       }
     );
-    this.programService.emitTraduction();
-    this.programService.getTraduction();
-    this.cd.detectChanges();
+
+    this.programService.getTraduction().then(
+      (traductionMap) => {
+        console.log('loadTraduction from home component');
+        this.traductionMap = traductionMap;
+        this.cd.detectChanges();
+      }).catch();
   }
 }

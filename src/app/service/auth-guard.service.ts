@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import {AuthenticatorService} from "./authenticator.service";
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from "@angular/router";
-import {Observable} from "rxjs";
+import {GoogleAuthService} from "./google-auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuardService {
 
-  constructor(private authenticatorService: AuthenticatorService,
+  constructor(private googleAuthService: GoogleAuthService,
               private router: Router) {
   }
 
@@ -18,7 +17,7 @@ export class AuthGuardService {
     state: RouterStateSnapshot
   ): any {
 
-    if (this.authenticatorService.user != null){
+    if (this.googleAuthService.googleUser != null){
       return true;
     }else{
       this.router.navigate(['/']).then();

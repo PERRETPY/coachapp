@@ -1,5 +1,5 @@
 <div class="workoutlist-component">
   <div *ngFor="let workout of workoutList" class="">
-    <app-workout-preview [workout]="workout" (click)="onWorkoutClick(workout)"></app-workout-preview>
+    <app-workout-preview [workout]="workout" [traductionMap]="traductionMap" (click)="onWorkoutClick(workout)"></app-workout-preview>
   </div>
 </div>

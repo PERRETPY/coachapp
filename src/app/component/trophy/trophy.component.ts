@@ -26,31 +26,46 @@ export class TrophyComponent implements OnInit {
               private zone: NgZone) { }
 
   ngOnInit(): void {
-    this.listModulesSubscription = this.programService.listModulesSubject.subscribe(
-      (listModules) => {
-        this.listModules = listModules;
-        this.cd.detectChanges();
-        if(this.listModules) {
-          this.getListWorkouts();
-        }
-      }
-    );
-    this.programService.emitListModules();
-    this.programService.getListModules();
+    this.getListModules();
   }
 
-  private getListWorkouts() {
+  getWorkoutList() {
+    this.listWorkouts = [];
+
     this.listWorkoutsSubscription = this.programService.listWorkoutSubject.subscribe(
       (workoutList) => {
         this.listWorkouts = workoutList;
-        if(this.listWorkouts) {
-          this.setListChallenge();
-          this.addWorkoutsToModules();
-        }
+        this.addWorkoutsToModules();
+        this.setListChallenge();
+        this.cd.detectChanges();
       }
     );
-    this.programService.emitWorkouts();
-    this.programService.getWorkouts();
+
+    this.programService.getWorkouts().then(
+      (workoutList) => {
+        this.listWorkouts = workoutList;
+        this.addWorkoutsToModules();
+        this.setListChallenge();
+        this.cd.detectChanges();
+      }).catch();
+
+  }
+
+  getListModules() {
+    this.listModulesSubscription = this.programService.listModulesSubject.subscribe(
+      (listModules) => {
+        this.listModules = listModules;
+        this.getWorkoutList();
+        this.cd.detectChanges();
+      }
+    );
+
+    this.programService.getListModules().then(
+      (listModules) => {
+        this.listModules = listModules;
+        this.getWorkoutList();
+        this.cd.detectChanges();
+      }).catch();
   }
 
   addWorkoutsToModules() {
@@ -92,5 +107,16 @@ export class TrophyComponent implements OnInit {
     this.zone.run(() => {
       this.router.navigate(['/workout/'+encode]);
     });
+  }
+
+  ngOnDestroy(): void {
+    console.log('on Destroy');
+
+    if(this.listWorkoutsSubscription) {
+      this.listWorkoutsSubscription.unsubscribe();
+    }
+    if(this.listModulesSubscription) {
+      this.listModulesSubscription.unsubscribe();
+    }
   }
 }

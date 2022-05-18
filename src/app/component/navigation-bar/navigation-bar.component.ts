@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticatorService} from "../../service/authenticator.service";
 import {SocialUser} from "angularx-social-login";
 import {Subscription} from "rxjs";
@@ -6,7 +6,6 @@ import {Router} from "@angular/router";
 import {ProgramService} from "../../service/program.service";
 import {MetaDonnees} from "../../model/metadonnees.model";
 import {GoogleAuthService} from "../../service/google-auth.service";
-import {HomeComponent} from "../home/home.component";
 
 declare global {
   interface Window { onSignIn: (googleuser: any) => void; }
@@ -17,21 +16,17 @@ declare global {
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.scss']
 })
-export class NavigationBarComponent implements OnInit {
+export class NavigationBarComponent implements OnInit, OnDestroy {
   user: SocialUser;
   userSubscription: Subscription;
 
-  user2: any;
-  user2Subscription: Subscription;
+  isSpreadSheetSetSubscription: Subscription;
 
   infosMetaDonnees: MetaDonnees;
   infosMetaDonneesSubscription: Subscription = new Subscription();
 
   traductionMap: Map<string, string> = new Map<string, string>();
   traductionMapSubscription: Subscription;
-
-  nbCallTrad: number = 0;
-  nbCallMeta: number = 0;
 
 
   constructor(private cd: ChangeDetectorRef,
@@ -43,19 +38,23 @@ export class NavigationBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.nbCallTrad = 0;
-    this.nbCallMeta = 0;
-    this.userSubscription = this.authenticatorService.userSubject.subscribe(
-      (user: any) => {
+    this.userSubscription = this.googleAuthService.googleUserSubject.subscribe(
+      (user: SocialUser) => {
         this.user = user;
-        if(this.user && this.spreadSheetIsSet()) {
-          this.getInfosMetaDonnees();
-          this.getTraductionMap();
-          this.cd.detectChanges();
+        console.log('user subscription');
+        this.cd.detectChanges();
+      }
+    );
+
+    this.authenticatorService.emitUserSubject();
+
+    this.isSpreadSheetSetSubscription = this.programService.isSpreadSheetSetSubject.subscribe(
+      (isSpreadSheetSet) => {
+        if(isSpreadSheetSet) {
+          this.loadData();
         }
       }
     );
-    this.authenticatorService.emitUserSubject();
   }
 
   onSignIn(googleUser) {
@@ -64,25 +63,6 @@ export class NavigationBarComponent implements OnInit {
         this.cd.detectChanges();
       }
     );
-    this.authenticatorService.signInWithGoogle();
-    this.user2Subscription = this.googleAuthService.googleUserSubject.subscribe(
-      (user) => {
-        this.user2 = user;
-        if(this.user2) {
-          this.user = new SocialUser();
-          this.user.name = this.user2.getBasicProfile().getName();
-          this.user.email = this.user2.getBasicProfile().getEmail();
-          this.user.id = this.user2.getBasicProfile().getId();
-          this.authenticatorService.user = this.user;
-          console.log('OK');
-          this.cd.detectChanges();
-        }
-        this.authenticatorService.emitUserSubject();
-      }
-    );
-    this.googleAuthService.emitGoogleUser();
-    console.log(this.user2.getBasicProfile());
-    this.cd.detectChanges();
   }
 
   onSignOut() {
@@ -91,42 +71,60 @@ export class NavigationBarComponent implements OnInit {
   }
 
   private getInfosMetaDonnees() {
-    this.nbCallMeta++;
-    if(this.nbCallMeta < 2) {
-      this.infosMetaDonneesSubscription = this.programService.infosMetaDonneesSubject.subscribe(
-        (infoMetaDonnees) => {
-          this.infosMetaDonnees = infoMetaDonnees;
-          if(this.infosMetaDonnees) {
-            console.log('META DONNEES');
-            console.log(infoMetaDonnees);
-            this.cd.detectChanges();
-          }
-        }
-      );
-      this.programService.emitMetaDonnees();
-      this.programService.getMetaDonnees();
-      this.cd.detectChanges();
-    }
-  }
+    this.infosMetaDonneesSubscription = this.programService.infosMetaDonneesSubject.subscribe(
+      (metaDonnees) => {
+        this.infosMetaDonnees = metaDonnees;
+      }
+    );
 
-  spreadSheetIsSet(): boolean {
-    this.cd.detectChanges();
-    return localStorage.getItem('sheetId') && true;
+    this.programService.getMetaDonnees().then(
+      (infosMetaDonnees) => {
+        this.infosMetaDonnees = infosMetaDonnees;
+      }
+    );
   }
 
   getTraductionMap() {
-    this.nbCallTrad++;
-    if(this.nbCallTrad < 2) {
-      console.log('get traduction map');
-      this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
-        (traductionMap) => {
-          this.traductionMap = traductionMap;
-          this.cd.detectChanges();
-        }
-      );
-      this.programService.emitTraduction();
-      this.programService.getTraduction();
-      this.cd.detectChanges();
+    this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
+      (traductionMap) => {
+        this.traductionMap = traductionMap;
+        this.cd.detectChanges();
+      }
+    );
+
+    this.programService.getTraduction().then(
+      (traductionMap) => {
+        this.traductionMap = traductionMap;
+        this.cd.detectChanges();
+      }).catch();
+  }
+
+  private loadData() {
+    console.log('loadData()');
+    if(!this.traductionMap || this.traductionMap.size < 1) {
+      console.log('getTraduction from navigation-bar into loadData()');
+      this.getTraductionMap();
+    }
+    if(!this.infosMetaDonnees) {
+      this.getInfosMetaDonnees();
+    }
+    this.cd.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    console.log('on Destroy');
+
+    if(this.traductionMapSubscription) {
+      this.traductionMapSubscription.unsubscribe();
+    }
+    if(this.isSpreadSheetSetSubscription) {
+      this.isSpreadSheetSetSubscription.unsubscribe();
+    }
+    if(this.infosMetaDonneesSubscription) {
+      this.infosMetaDonneesSubscription.unsubscribe();
+    }
+    if(this.userSubscription) {
+      this.userSubscription.unsubscribe();
     }
   }
 }

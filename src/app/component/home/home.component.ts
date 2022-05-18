@@ -1,11 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
 import { GoogleAuthService } from 'src/app/service/google-auth.service';
 import { ProgramService } from 'src/app/service/program.service';
 import { SheetModel } from '../../model/sheet-model';
 import {Workout} from "../../model/workout.model";
-import {Subscription} from "rxjs";
+import {Observer, Subscription} from "rxjs";
 import {SocialUser} from "angularx-social-login";
-import {AuthenticatorService} from "../../service/authenticator.service";
 
 declare global {
   interface Window { onSignIn: (googleuser: any) => void; }
@@ -16,9 +15,13 @@ declare global {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   allWorkoutList: Workout[] = [];
   workoutSubscription: Subscription;
+  workoutObserver: Observer<Workout[]>;
+
+  isSpreadSheetSetSubscription: Subscription;
+  isSpreadSheetSet: boolean;
 
   filterWorkoutList: Workout[] = [];
 
@@ -42,30 +45,87 @@ export class HomeComponent implements OnInit {
 
   loaded: boolean = false;
 
-  nbCall: number = 0;
-
   constructor(public cd: ChangeDetectorRef,
               public gauth: GoogleAuthService,
               public programService: ProgramService,
-              private authenticatorService: AuthenticatorService) {
+              private googleAuthService: GoogleAuthService) {
     this.output = "Renseigner l'id du google sheet puis appuyer sur Envoyer. ";
   }
 
   ngOnInit() {
-    this.nbCall = 0;
-    this.allWorkoutList = [];
-    this.filterWorkoutList = [];
-    this.userSubscription = this.authenticatorService.userSubject.subscribe(
+    console.log('Home component');
+    this.userSubscription = this.googleAuthService.googleUserSubject.subscribe(
       (user: any) => {
+        console.log('UserSubscribe');
         this.user = user;
+        this.loadData();
         this.cd.detectChanges();
-        if(this.user && this.spreadSheetIsSet()) {
-          this.getTraductionMap();
-          this.getWorkoutList();
-        }
       }
     );
-    this.authenticatorService.emitUserSubject();
+    this.googleAuthService.emitGoogleUser();
+
+    this.isSpreadSheetSetSubscription = this.programService.isSpreadSheetSetSubject.subscribe(
+      (isSpreadSheetSet) => {
+        console.log('SpreadSheetSubscribe');
+        this.isSpreadSheetSet = isSpreadSheetSet;
+        this.loadData();
+        this.cd.detectChanges();
+      }
+    );
+    this.programService.emitSpreadSheetSet();
+
+    this.loadData();
+  }
+
+  loadData() {
+    if(this.user && this.isSpreadSheetSet) {
+      if(!this.traductionMap || this.traductionMap.size < 1) {
+        this.getTraductionMap();
+      }
+      if(!this.allWorkoutList || this.allWorkoutList.length < 1) {
+        this.getWorkoutList();
+      }
+    }
+  }
+
+  getWorkoutList() {
+    this.allWorkoutList = [];
+    this.filterWorkoutList = [];
+
+    this.workoutSubscription = this.programService.listWorkoutSubject.subscribe(
+      (workoutList) => {
+        this.allWorkoutList = workoutList;
+        this.filterWorkoutList = this.allWorkoutList;
+        this.cd.detectChanges();
+      }
+    );
+
+    this.programService.getWorkouts().then(
+      (workoutList) => {
+        this.allWorkoutList = workoutList;
+        this.filterWorkoutList = this.allWorkoutList;
+        this.programService.emitSpreadSheetSet();
+        this.loaded = true;
+        this.cd.detectChanges();
+      }).catch();
+  }
+
+  getTraductionMap() {
+    console.log('get traduction')
+    this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
+      (traductionMap) => {
+        this.traductionMap = traductionMap;
+        this.cd.detectChanges();
+      }
+    );
+
+    this.programService.getTraduction().then(
+      (traductionMap) => {
+        console.log('loadTraduction from home component');
+        this.traductionMap = traductionMap;
+        this.loaded = true;
+        this.cd.detectChanges();
+      }).catch();
   }
 
   onSubmit() {
@@ -75,11 +135,11 @@ export class HomeComponent implements OnInit {
       () => {
         this.programService.setSpreadsheets(this.model.sheetId).then(
           () => {
-            if(this.spreadSheetIsSet()) {
+            if(this.programService.isSpreadSheetSet()) {
               this.getTraductionMap();
               this.getWorkoutList();
               this.cd.detectChanges();
-              location.reload();
+              //location.reload();
             }
           }
         );
@@ -87,42 +147,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  spreadSheetIsSet(): boolean {
-    return localStorage.getItem('sheetId') && true;
-  }
-
-  getWorkoutList() {
-    this.allWorkoutList = [];
-    this.filterWorkoutList = [];
-    this.workoutSubscription = this.programService.listWorkoutSubject.subscribe(
-      (workoutList) => {
-        this.allWorkoutList = workoutList;
-        if(this.allWorkoutList) {
-          this.filterWorkoutList = this.allWorkoutList;
-          this.onSortWorkouts();
-          this.loaded = true;
-          this.cd.detectChanges();
-        }
-      }
-    );
-    this.programService.emitWorkouts();
-    this.programService.getWorkouts();
-  }
-
-  getTraductionMap() {
-    this.nbCall++;
-    if(this.nbCall < 2) {
-      console.log('getTraductionMap');
-      this.traductionMapSubscription = this.programService.traductionMapSubject.subscribe(
-        (traductionMap) => {
-          this.traductionMap = traductionMap;
-          this.cd.detectChanges();
-        }
-      );
-      this.programService.emitTraduction();
-      this.programService.getTraduction();
-    }
-  }
+  //--
 
   onFilterWorkouts() {
     if(this.stateFilter !== 'tous') {
@@ -169,4 +194,22 @@ export class HomeComponent implements OnInit {
     }
     this.cd.detectChanges();
   }
+
+  ngOnDestroy(): void {
+    console.log('on Destroy');
+
+    if(this.traductionMapSubscription) {
+      this.traductionMapSubscription.unsubscribe();
+    }
+    if(this.isSpreadSheetSetSubscription) {
+      this.isSpreadSheetSetSubscription.unsubscribe();
+    }
+    if(this.workoutSubscription) {
+      this.workoutSubscription.unsubscribe();
+    }
+    if(this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
+
 }
