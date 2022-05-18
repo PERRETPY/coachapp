@@ -97,7 +97,10 @@ export class TrophyComponent implements OnInit {
   private setListChallenge() {
     this.listChallenge = this.listWorkouts.filter(
       workout => workout.type === 'Défi'
-    )
+    );
+    this.listChallenge.sort(
+      (a, b) => a.etat < b.etat ? 1 : a.etat === b.etat ? 0 : -1
+    );
   }
 
   onChallengeClick(challenge: Workout) {
