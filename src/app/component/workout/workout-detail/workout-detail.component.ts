@@ -4,8 +4,8 @@ import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs";
 import {ProgramService} from "../../../service/program/program.service";
 import Util from "../../../util/util";
-import {AuthenticatorService} from "../../../service/authenticator.service";
 import {DatePipe} from '@angular/common';
+import {ToastService} from "../../../service/toast/toast.service";
 
 @Component({
   selector: 'app-workout-detail',
@@ -24,30 +24,33 @@ export class WorkoutDetailComponent implements OnInit {
   traductionMap: Map<string, string> = new Map<string, string>();
   traductionMapSubscription: Subscription;
 
+  codeModule: string;
+  titre: string;
+  dateDebutPrevue: string;
+
+
   constructor(private route: ActivatedRoute,
               private programService: ProgramService,
               private cd: ChangeDetectorRef,
-              private authenticatorService: AuthenticatorService,
-              private datePipe: DatePipe) { }
+              private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.getTraductionMap();
-    //this.workout = null;
-    //this.commentaire = '';
+    this.getWorkout();
+  }
 
-    //Get workout id
+  getId() {
     const workoutIdEncode = this.route.snapshot.params['id'];
     this.workoutId = Util.hexDecode(workoutIdEncode);
     const workoutInfo = this.workoutId.split(';');
-    const codeModule = workoutInfo[0];
-    const titre = workoutInfo[1];
-    const dateDebutPrevue = workoutInfo[2];
-
-    this.getWorkout(codeModule, titre, dateDebutPrevue);
-
+    this.codeModule = workoutInfo[0];
+    this.titre = workoutInfo[1];
+    this.dateDebutPrevue = workoutInfo[2];
   }
 
-  getWorkout(codeModule: string, titre: string, dateDebutPrevue: string): void {
+  getWorkout(): void {
+    console.log('getWorkout()');
+    this.getId();
     let lienDocument;
     this.workoutSubscription = this.programService.workoutSubject.subscribe(
       (workout) => {
@@ -62,7 +65,7 @@ export class WorkoutDetailComponent implements OnInit {
       }
     );
 
-    this.programService.getWorkoutById(codeModule, titre, dateDebutPrevue).then(
+    this.programService.getWorkoutById(this.codeModule, this.titre, this.dateDebutPrevue).then(
       (workout) => {
         this.workout = workout;
         lienDocument = workout.lienDocument;
@@ -75,67 +78,35 @@ export class WorkoutDetailComponent implements OnInit {
     ).catch();
   }
 
-
   onSubmitCommentaire() {
     //Vérification que le commentaire a changé
     if(this.commentaire !== this.workout.commentaire) {
       this.programService.putCommentOnWorkout(this.workout, this.commentaire).then(
         () => {
           this.workout.commentaire = this.commentaire
+          this.toastService.show('Commentaire envoyé', { classname: 'bg-success text-light'});
           this.cd.detectChanges();
+        }
+      ).catch(
+        () => {
+          this.toastService.show('Erreur lors de l\'envoie du commentaire', { classname: 'bg-danger text-light'});
         }
       );
     }
   }
 
   onChangeState(newState: string) {
-    const date = new Date();
-    const dateToString = this.datePipe.transform(date,"dd/MM/yyyy");
-    gapi.client.sheets.spreadsheets.values.update({
-      spreadsheetId: localStorage.getItem('sheetId'),
-      range:'Exercices!G' + this.workout.range,
-      valueInputOption: 'RAW',
-      resource: {
-        values: [
-          [newState]
-        ]
+    this.programService.changeState(newState).then(
+      () => {
+        this.getWorkout();
+        this.toastService.show('Modification prises en compte', { classname: 'bg-success text-light'});
+        this.cd.detectChanges();
       }
-    }).then(() => this.cd.detectChanges());
-    if(newState == "en cours") {
-      gapi.client.sheets.spreadsheets.values.update({
-        spreadsheetId: localStorage.getItem('sheetId'),
-        range:'Exercices!I' + this.workout.range,
-        valueInputOption: 'RAW',
-        resource: {
-          values: [
-            [dateToString]
-          ]
-        }
-      }).then(() => this.cd.detectChanges());
-      gapi.client.sheets.spreadsheets.values.update({
-        spreadsheetId: localStorage.getItem('sheetId'),
-        range:'Exercices!K' + this.workout.range,
-        valueInputOption: 'RAW',
-        resource: {
-          values: [
-            [""]
-          ]
-        }
-      }).then(() =>this.cd.detectChanges());
-    }
-    if(newState == "terminé") {
-      gapi.client.sheets.spreadsheets.values.update({
-        spreadsheetId: localStorage.getItem('sheetId'),
-        range:'Exercices!K' + this.workout.range,
-        valueInputOption: 'RAW',
-        resource: {
-          values: [
-            [dateToString]
-          ]
-        }
-      }).then(() => this.cd.detectChanges());
-    }
-    this.ngOnInit();
+    ).catch(
+      () => {
+        this.toastService.show('Erreur lors de la modification', { classname: 'bg-danger text-light'});
+      }
+    );
   }
 
   isYoutubeLink(urlLink: string): boolean {

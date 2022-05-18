@@ -5,6 +5,7 @@ import {Module} from '../../model/module.model';
 import {Workout} from '../../model/workout.model';
 import {Subject} from "rxjs";
 import {GoogleAuthService} from "../google-auth/google-auth.service";
+import {DatePipe} from "@angular/common";
 
 @Injectable()
 export class ProgramService {
@@ -29,7 +30,8 @@ export class ProgramService {
 
   isSpreadSheetSetSubject: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private googleAuthService: GoogleAuthService) {
+  constructor(private googleAuthService: GoogleAuthService,
+              private datePipe: DatePipe) {
     console.log('ProgramService instance created.');
     this.loadClient().then(
       () => {
@@ -263,6 +265,7 @@ export class ProgramService {
     return new Promise<Workout>(
       (resolve, reject) => {
         if(this.workout) {
+          this.emitWorkout();
           resolve(this.workout);
         } else {
           reject();
@@ -408,5 +411,67 @@ export class ProgramService {
         reject();
       }
     });
+  }
+
+  changeState(newState: string): Promise<void> {
+    const date = new Date();
+    const dateToString = this.datePipe.transform(date,"dd/MM/yyyy");
+
+    let allPromise = [];
+    allPromise.push(gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: localStorage.getItem('sheetId'),
+      range:'Exercices!G' + this.workout.range,
+      valueInputOption: 'RAW',
+      resource: {
+        values: [
+          [newState]
+        ]
+      }
+    }));
+
+    if(newState == "en cours") {
+      allPromise.push(gapi.client.sheets.spreadsheets.values.update({
+        spreadsheetId: localStorage.getItem('sheetId'),
+        range:'Exercices!I' + this.workout.range,
+        valueInputOption: 'RAW',
+        resource: {
+          values: [
+            [dateToString]
+          ]
+        }
+      }));
+
+      allPromise.push(gapi.client.sheets.spreadsheets.values.update({
+        spreadsheetId: localStorage.getItem('sheetId'),
+        range:'Exercices!K' + this.workout.range,
+        valueInputOption: 'RAW',
+        resource: {
+          values: [
+            [""]
+          ]
+        }
+      }));
+    }else if(newState == "terminé") {
+      allPromise.push(gapi.client.sheets.spreadsheets.values.update({
+        spreadsheetId: localStorage.getItem('sheetId'),
+        range:'Exercices!K' + this.workout.range,
+        valueInputOption: 'RAW',
+        resource: {
+          values: [
+            [dateToString]
+          ]
+        }
+      }));
+    }
+
+    return new Promise<void>(
+      (resolve, reject) => {
+        Promise.all(allPromise).then(
+          () => {
+            resolve();
+          }
+        );
+      }
+    )
   }
 }

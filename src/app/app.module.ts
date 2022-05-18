@@ -24,6 +24,8 @@ import { NavigationBarComponent } from './component/navigation-bar/navigation-ba
 import { TrophyComponent } from './component/trophy/trophy.component';
 import { ToastContainerComponent } from './component/toast-container/toast-container.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {DatePipe} from "@angular/common";
+import {GoogleAuthService} from "./service/google-auth/google-auth.service";
 
 @NgModule({
   declarations: [
@@ -65,8 +67,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AuthenticatorService,
     ProgramService,
     JsLoaderService,
-    //GoogleAuthService,
+    GoogleAuthService,
     SocialAuthService,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })
