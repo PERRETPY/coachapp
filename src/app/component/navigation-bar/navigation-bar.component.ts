@@ -53,7 +53,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
     );
   }
 
-  private onSignIn(googleUser): void {
+  public onSignIn(googleUser): void {
     this.googleAuthService.onSignIn(googleUser).then(
       () => {
         this.cd.detectChanges();
