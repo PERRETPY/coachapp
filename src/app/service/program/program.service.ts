@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Coach} from '../model/coach.model';
-import {MetaDonnees} from '../model/metadonnees.model';
-import {Module} from '../model/module.model';
-import {Workout} from '../model/workout.model';
+import {Coach} from '../../model/coach.model';
+import {MetaDonnees} from '../../model/metadonnees.model';
+import {Module} from '../../model/module.model';
+import {Workout} from '../../model/workout.model';
 import {Subject} from "rxjs";
-import {GoogleAuthService} from "./google-auth.service";
+import {GoogleAuthService} from "../google-auth/google-auth.service";
 
 @Injectable()
 export class ProgramService {

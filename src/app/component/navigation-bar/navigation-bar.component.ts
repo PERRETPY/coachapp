@@ -3,9 +3,9 @@ import {AuthenticatorService} from "../../service/authenticator.service";
 import {SocialUser} from "angularx-social-login";
 import {Subscription} from "rxjs";
 import {Router} from "@angular/router";
-import {ProgramService} from "../../service/program.service";
+import {ProgramService} from "../../service/program/program.service";
 import {MetaDonnees} from "../../model/metadonnees.model";
-import {GoogleAuthService} from "../../service/google-auth.service";
+import {GoogleAuthService} from "../../service/google-auth/google-auth.service";
 
 declare global {
   interface Window { onSignIn: (googleuser: any) => void; }

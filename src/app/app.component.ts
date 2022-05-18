@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleAuthService } from './service/google-auth.service';
+import { GoogleAuthService } from './service/google-auth/google-auth.service';
 import { ChangeDetectorRef } from '@angular/core';
-import { ProgramService } from './service/program.service';
+import { ProgramService } from './service/program/program.service';
 
 declare global {
   interface Window { onSignIn: (googleuser: any) => void; }

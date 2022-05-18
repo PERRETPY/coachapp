@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, NgZone, OnInit} from '@angular/core';
 import {Module} from "../../model/module.model";
 import {Subscription} from "rxjs";
-import {ProgramService} from "../../service/program.service";
+import {ProgramService} from "../../service/program/program.service";
 import {Workout} from "../../model/workout.model";
 import Util from '../../util/util';
 import {Router} from "@angular/router";

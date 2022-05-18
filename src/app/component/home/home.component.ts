@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { GoogleAuthService } from 'src/app/service/google-auth.service';
-import { ProgramService } from 'src/app/service/program.service';
+import { GoogleAuthService } from 'src/app/service/google-auth/google-auth.service';
+import { ProgramService } from 'src/app/service/program/program.service';
 import { SheetModel } from '../../model/sheet-model';
 import { Workout } from "../../model/workout.model";
 import { Subscription} from "rxjs";

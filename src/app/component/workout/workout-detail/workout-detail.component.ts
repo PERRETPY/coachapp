@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Workout} from "../../../model/workout.model";
 import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs";
-import {ProgramService} from "../../../service/program.service";
+import {ProgramService} from "../../../service/program/program.service";
 import Util from "../../../util/util";
 import {AuthenticatorService} from "../../../service/authenticator.service";
 import {DatePipe} from '@angular/common';

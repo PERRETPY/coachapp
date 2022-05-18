@@ -18,11 +18,12 @@ import { ContactComponent } from './component/contact/contact.component';
 import { WorkoutListComponent } from './component/workout/workout-list/workout-list.component';
 import { WorkoutPreviewComponent } from './component/workout/workout-preview/workout-preview.component';
 import { WorkoutDetailComponent } from './component/workout/workout-detail/workout-detail.component';
-import { ProgramService } from './service/program.service';
-import { JsLoaderService } from './service/js-loader.service';
-import { GoogleAuthService } from './service/google-auth.service';
+import { ProgramService } from './service/program/program.service';
+import { JsLoaderService } from './service/program/js-loader.service';
 import { NavigationBarComponent } from './component/navigation-bar/navigation-bar.component';
 import { TrophyComponent } from './component/trophy/trophy.component';
+import { ToastContainerComponent } from './component/toast-container/toast-container.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { TrophyComponent } from './component/trophy/trophy.component';
     WorkoutPreviewComponent,
     WorkoutDetailComponent,
     NavigationBarComponent,
-    TrophyComponent
+    TrophyComponent,
+    ToastContainerComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +44,8 @@ import { TrophyComponent } from './component/trophy/trophy.component';
     SocialLoginModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
   ],
   providers: [
     {

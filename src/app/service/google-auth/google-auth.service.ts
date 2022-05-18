@@ -1,5 +1,5 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {JsLoaderService} from './js-loader.service';
+import {JsLoaderService} from '../program/js-loader.service';
 import {Subject} from "rxjs";
 import {SocialUser} from "angularx-social-login";
 

@@ -1,8 +1,9 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import { Coach } from 'src/app/model/coach.model';
 import { MetaDonnees } from 'src/app/model/metadonnees.model';
-import { ProgramService } from 'src/app/service/program.service';
+import { ProgramService } from 'src/app/service/program/program.service';
 import {Subscription} from "rxjs";
+import {ToastService} from "../../service/toast/toast.service";
 
 @Component({
   selector: 'app-contact',
@@ -20,7 +21,8 @@ export class ContactComponent implements OnInit, OnDestroy {
   private loaded: boolean = false;
 
   constructor(private programService: ProgramService,
-              private cd: ChangeDetectorRef) { }
+              private cd: ChangeDetectorRef,
+              private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.getInfoCoach();
@@ -62,4 +64,8 @@ export class ContactComponent implements OnInit, OnDestroy {
     }
   }
 
+  newNotification() {
+    console.log("New notification");
+    this.toastService.show('Text de notification', { classname: 'bg-success text-light'});
+  }
 }
