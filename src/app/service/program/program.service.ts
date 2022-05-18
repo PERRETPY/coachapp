@@ -413,9 +413,10 @@ export class ProgramService {
     });
   }
 
-  changeState(newState: string): Promise<void> {
+  public changeState(newState: string): Promise<void> {
     const date = new Date();
     const dateToString = this.datePipe.transform(date,"dd/MM/yyyy");
+    console.log(dateToString);
 
     let allPromise = [];
     allPromise.push(gapi.client.sheets.spreadsheets.values.update({
@@ -433,7 +434,7 @@ export class ProgramService {
       allPromise.push(gapi.client.sheets.spreadsheets.values.update({
         spreadsheetId: localStorage.getItem('sheetId'),
         range:'Exercices!I' + this.workout.range,
-        valueInputOption: 'RAW',
+        valueInputOption: 'USER_ENTERED',
         resource: {
           values: [
             [dateToString]
@@ -455,7 +456,7 @@ export class ProgramService {
       allPromise.push(gapi.client.sheets.spreadsheets.values.update({
         spreadsheetId: localStorage.getItem('sheetId'),
         range:'Exercices!K' + this.workout.range,
-        valueInputOption: 'RAW',
+        valueInputOption: 'USER_ENTERED',
         resource: {
           values: [
             [dateToString]
@@ -465,7 +466,7 @@ export class ProgramService {
     }
 
     return new Promise<void>(
-      (resolve, reject) => {
+      (resolve) => {
         Promise.all(allPromise).then(
           () => {
             resolve();
